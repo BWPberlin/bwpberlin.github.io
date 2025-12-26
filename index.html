@@ -811,19 +811,25 @@
             margin-bottom: 100px;
         }
 
+        /* --- BASIS-ZUSTAND --- */
         .process-step {
             background: white;
             padding: 40px 30px;
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: none;
+            /* Hier: Ein transparenter Rahmen als Platzhalter verhindert "Springen" */
+            border: 2px solid transparent; 
             transition: all 0.4s ease;
             position: relative;
         }
 
+        /* --- HOVER-ZUSTAND --- */
         .process-step:hover {
             transform: translateY(-10px);
+            /* Hier: Der Rahmen wird beim Hovern gelb */
+            border-color: var(--accent-yellow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         .step-number {
