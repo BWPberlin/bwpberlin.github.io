@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berliner Wendepunkt | Jetzt. Wenden. Berlin.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #002D5A;
+            --accent-yellow: #FFC107;
+            --light-bg: #f4f7f9;
+            --text-dark: #1a1a1a;
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { color: var(--text-dark); line-height: 1.6; scroll-behavior: smooth; overflow-x: hidden; background-color: white; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%; 
+            height: 80px; 
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        .logo-box { display: flex; align-items: center; text-decoration: none; margin-right: auto; }
+        
+        .logo-img { 
+            height: 85px; 
+            width: auto; 
+            margin-right: 5px; 
+            margin-left: -40px;
+        } 
+        
+        .logo-text { 
+            font-weight: 800; 
+            font-size: 1.2rem; 
+            color: var(--primary-blue); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        
+        nav ul { 
+            display: flex; 
+            list-style: none; 
+            align-items: center; 
+            margin-left: auto; 
+        }
+        nav ul li { margin-left: 25px; position: relative; }
+
+        nav ul li a { 
+            text-decoration: none; 
+            color: var(--primary-blue); 
+            font-weight: 600; 
+            font-size: 1rem; 
+            transition: var(--transition);
+            position: relative;
+            padding-bottom: 5px;
+            cursor: pointer;
+        }
+
+        nav ul li a::after {
+            content: ''; position: absolute; width: 0; height: 3px; bottom: 0; left: 0;
+            background-color: var(--accent-yellow); transition: width 0.3s ease-in-out; 
+        }
+        nav ul li a:hover::after { width: 100%; }
+
+        /* --- SPRACHUMSCHALTER --- */
+        .language-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 2px solid rgba(0, 45, 90, 0.1);
+            color: var(--primary-blue);
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            position: relative;
+            z-index: 1002;
+            background-color: rgba(255,255,255,0.98);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--accent-yellow);
+            background-color: #fffbf0;
+        }
+
+        .lang-content {
+            position: absolute;
+            right: 0;
+            top: 100%; 
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0 15px 35px rgba(0,45,90,0.15); 
+            z-index: 1001;
+            border-radius: 0 0 8px 8px; 
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 0; 
+            overflow: hidden; 
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px); 
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .lang-content.show { 
+            max-height: 400px; 
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-content button {
+            background: none;
+            border: none;
+            color: #555;
+            padding: 15px 20px; 
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.2s;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .lang-content button:last-child { border-bottom: none; }
+
+        .lang-content button:hover {
+            background-color: #f8fafc;
+            color: var(--primary-blue);
+            padding-left: 25px; 
+        }
+
+        .lang-content button.active-lang {
+            color: var(--primary-blue);
+            font-weight: 700;
+            background-color: #f0f7ff;
+        }
+        
+        .lang-content button.active-lang::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%; 
+            width: 4px; 
+            background-color: var(--accent-yellow);
+        }
+
+        /* --- HEADER & HERO --- */
+        header {
+            height: 100vh; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white; overflow: hidden;
+        }
+        .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--primary-blue); }
+        
+        /* ZURÜCKGESETZT: Bild statt Video im Header */
+        .video-placeholder {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
+            background-image: url('https://images.unsplash.com/photo-1560969184-10fe8719e047?q=80&w=2070');
+            background-size: cover; background-position: center;
+        }
+
+        .hero-content h1 { font-size: 4.5rem; letter-spacing: -1px; margin-bottom: 0.5rem; }
+        .slogan { font-size: 2.8rem; font-weight: 900; margin-bottom: 2.5rem; }
+        .slogan .blue { color: white; }
+        .slogan .yellow { color: var(--accent-yellow); }
+        .values-card {
+            max-width: 850px; margin: 0 auto; padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px);
+            border-radius: 4px; border-left: 6px solid var(--accent-yellow);
+            text-align: left; animation: fadeInUp 1.2s ease;
+        }
+
+        /* --- SECTIONS --- */
+        #programm { background: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%); }
+        .section-title { font-size: 3rem; color: var(--primary-blue); text-align: center; margin-bottom: 1rem; }
+        .section-title::after {
+            content: ''; display: block; width: 80px; height: 6px;
+            background: var(--accent-yellow); margin: 15px auto auto; border-radius: 3px;
+        }
+        #kontakt .section-title { color: white; }
+        .section-subtitle { text-align: center; color: #666; margin-bottom: 4rem; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        
+        .program-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 60px; }
+        .program-item { 
+            background: white; padding: 30px; border-radius: 12px; transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; text-align: left; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
+        }
+        .program-item:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,45,90,0.1); border-color: var(--accent-yellow); }
+        
+        .program-icon { 
+            width: 45px; height: 45px; background: var(--primary-blue); color: white; 
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 20px; font-size: 1.2rem; transition: var(--transition);
+        }
+        .program-item:hover .program-icon { background: var(--accent-yellow); color: var(--primary-blue); }
+        
+        .program-item h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.4rem; }
+        .program-item ul { list-style: none; }
+        .program-item ul li { margin-bottom: 12px; position: relative; padding-left: 25px; font-size: 0.9rem; color: #333; line-height: 1.5; }
+        .program-item ul li::before { content: '\f058'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; left: 0; color: var(--accent-yellow); }
+
+        #ueber-uns { background: #f8fafc; padding: 100px 10%; }
+        .about-container { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        
+        .ideology-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+        .ideology-box {
+            background: white; padding: 25px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            text-align: left; transition: all 0.4s ease; cursor: pointer; position: relative; overflow: hidden; border: 1px solid transparent;
+        }
+        .ideology-box:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,45,90,0.1); border-color: var(--accent-yellow); }
+
+        .ideology-header { display: flex; align-items: center; margin-bottom: 5px; transition: margin-bottom 0.3s ease; }
+        .ideology-icon-wrapper {
+            width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            margin-right: 15px; font-size: 1.2rem; background-color: var(--primary-blue); color: white;
+            transition: all 0.4s ease; flex-shrink: 0; 
+        }
+        .ideology-box h4 { color: var(--primary-blue); font-size: 1.1rem; font-weight: 800; margin: 0; flex: 1; }
+        .ideology-desc { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s ease; color: #555; font-size: 0.9rem; line-height: 1.5; }
+        
+        .ideology-box:hover .ideology-icon-wrapper { background-color: var(--accent-yellow); color: var(--primary-blue); }
+        .ideology-box:hover .ideology-desc { max-height: 250px; opacity: 1; margin-top: 15px; }
+        .ideology-box:hover .ideology-header { margin-bottom: 0; }
+
+        #vorstand { background: white; padding-top: 100px; }
+        section { padding: 100px 10%; }
+        .vorstand-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; justify-items: center; }
+        .profile { text-align: center; position: relative; perspective: 1000px; width: 100%; }
+        .img-square { 
+            width: 200px; height: 200px; background: #e0e0e0; border-radius: 20px; 
+            margin: 0 auto 20px; border: 4px solid var(--primary-blue); display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; transition: var(--transition); position: relative; z-index: 2;
+        }
+        .profile-info {
+            position: absolute; top: 210px; left: 50%; transform: translateX(-50%) translateY(10px);
+            width: 220px; background: white; padding: 15px; border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); opacity: 0; visibility: hidden;
+            transition: var(--transition); z-index: 10; border-top: 4px solid var(--primary-blue);
+        }
+        .profile:hover .img-square { transform: scale(1.1); box-shadow: 0 10px 30px rgba(0,45,90,0.2); }
+        .profile:hover .profile-info { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+        #kontakt { background: linear-gradient(135deg, #002D5A 0%, #001B36 100%); padding: 120px 10%; color: white; }
+        .contact-wrapper { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; }
+        .contact-info h3 { font-size: 2rem; margin-bottom: 20px; color: white; }
+        .contact-info p { color: #d0d8e0; font-size: 1.05rem; margin-bottom: 30px; line-height: 1.7; }
+        .contact-benefits { list-style: none; padding: 0; }
+        .contact-benefits li { margin-bottom: 12px; padding-left: 28px; position: relative; color: #ffffff; font-size: 0.95rem; }
+        .contact-benefits li::before { content: '\f00c'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; left: 0; color: var(--accent-yellow); }
+        .contact-card { background: white; padding: 45px; border-radius: 18px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .contact-card input, .contact-card textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+        .submit-btn { width: 100%; padding: 18px; background: var(--accent-yellow); color: var(--primary-blue); border: none; font-weight: 800; cursor: pointer; border-radius: 8px; transition: var(--transition); }
+        .submit-btn:hover { background: #e0a800; }
+        
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; color: #fff; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
+        .pdf-download-area { text-align: center; padding: 50px; background: var(--primary-blue); color: white; border-radius: 15px; }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1300px) { .vorstand-row { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+        @media (max-width: 1000px) { 
+            .about-container { grid-template-columns: 1fr; text-align: center; } 
+            .program-grid { grid-template-columns: repeat(2, 1fr); } 
+            .vorstand-row { grid-template-columns: repeat(2, 1fr); } 
+            .ideology-grid { text-align: left; }
+            .contact-wrapper { grid-template-columns: 1fr; text-align: center; }
+        }
+        @media (max-width: 700px) { 
+            .program-grid { grid-template-columns: 1fr; } 
+            .vorstand-row { grid-template-columns: 1fr; } 
+            nav { flex-direction: column; padding: 10px; height: auto; }
+            nav ul { margin-top: 10px; flex-wrap: wrap; justify-content: center; margin-left: 0; }
+            .lang-container { margin-left: 0; margin-top: 10px; }
+            .logo-img { height: 60px; margin-left: 0; } 
+            .logo-text { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home" class="logo-box">
+            <img src="assets/img/Logo.png" alt="Logo" class="logo-img">
+            <span class="logo-text">Berliner Wendepunkt</span>
+        </a>
+        <ul>
+            <li><a href="#home" data-i18n="nav_home">Home</a></li>
+            <li><a href="#programm" data-i18n="nav_program">Programm</a></li>
+            <li><a href="#ueber-uns" data-i18n="nav_about">Über Uns</a></li>
+            <li><a href="#vorstand" data-i18n="nav_board">Vorstand</a></li>
+            <li><a href="#kontakt" data-i18n="nav_membership">Mitgliedschaft</a></li>
+            
+            <li class="language-dropdown">
+                <button class="lang-btn" id="langToggle">
+                    <i class="fas fa-globe"></i> <span data-i18n="btn_lang">Sprache</span> <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="lang-content" id="langMenu">
+                    <button onclick="setLang('de')" class="active-lang">Deutsch</button>
+                    <button onclick="setLang('en')">English</button>
+                    <button onclick="setLang('tr')">Türkçe</button>
+                    <button onclick="setLang('uk')">Українська</button>
+                    <button onclick="setLang('ru')">Русский</button>
+                    <button onclick="setLang('pl')">Polski</button>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <header id="home">
+        <div class="hero-video-container">
+            <div class="video-placeholder"></div>
+        </div>
+        <div class="hero-content">
+            <h1 data-i18n="hero_title">Berliner Wendepunkt</h1>
+            <div class="slogan">
+                <span class="blue" data-i18n="hero_slogan_1">Jetzt.</span> 
+                <span class="yellow" data-i18n="hero_slogan_2">Wenden.</span> 
+                <span class="blue" data-i18n="hero_slogan_3">Berlin.</span>
+            </div>
+            <div class="values-card">
+                <p style="font-size: 1.2rem; line-height: 1.8;" data-i18n="hero_text">
+                   Berlin ist Weltstadt, wird aber unter Wert regiert. Der Berliner Wendepunkt tritt an, um die Fesseln der Bürokratie zu lösen. Wir glauben nicht an Verbote, sondern an Innovation. Wir setzen nicht auf Umverteilung, sondern auf Wachstum. Unser Ziel: Eine Stadt, in der nicht die Herkunft entscheidet, sondern das Talent und der Wille zur Leistung.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <section id="programm" class="reveal">
+        <h2 class="section-title" data-i18n="program_title">Unser Programm</h2>
+        <div class="program-grid">
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-chart-line"></i></div>
+                <h3 data-i18n="prog_fin_title">Finanzen</h3>
+                <ul>
+                    <li data-i18n="prog_fin_1">Gewerbesteuer-Hebesätze auf 350% reduzieren, um Investitionen anzuziehen.</li>
+                    <li data-i18n="prog_fin_2">Mikrokredite von 15.000 bis 70.000 € zur Gründer-Sicherheit.</li>
+                    <li data-i18n="prog_fin_3">Co-Investment-Programm nach US-Vorbild für Start-ups.</li>
+                    <li data-i18n="prog_fin_4">Konsequente Einhaltung der Schuldenbremse.</li>
+                </ul>
+            </div>
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-city"></i></div>
+                <h3 data-i18n="prog_house_title">Wohnen (X-Quartiere)</h3>
+                <ul>
+                    <li data-i18n="prog_house_1">Neue Siedlungsgebiete in Außenbezirken („X-Quartiere“).</li>
+                    <li data-i18n="prog_house_2">Ansiedlung von Business Centern zur Arbeitsplatzschaffung vor Ort.</li>
+                    <li data-i18n="prog_house_3">Verschlankung der Genehmigungsverfahren im Baumanagement.</li>
+                    <li data-i18n="prog_house_4">Massiver Ausbau von ÖPNV und Highspeed-Internet.</li>
+                </ul>
+            </div>
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-car"></i></div>
+                <h3 data-i18n="prog_mob_title">Mobilität</h3>
+                <ul>
+                    <li data-i18n="prog_mob_1">Technologieoffenheit: Keine Verbote von Antriebsarten.</li>
+                    <li data-i18n="prog_mob_2">Fertigstellung der A100 zur Entlastung der Innenstadt.</li>
+                    <li data-i18n="prog_mob_3">Testfelder für autonomes Fahren im Stadtgebiet.</li>
+                    <li data-i18n="prog_mob_4">Öffnung des ÖPNV für privaten Wettbewerb.</li>
+                </ul>
+            </div>
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 data-i18n="prog_int_title">Inneres & Justiz</h3>
+                <ul>
+                    <li data-i18n="prog_int_1">Modernisierung der Justiz zur Beschleunigung von Verfahren.</li>
+                    <li data-i18n="prog_int_2">Härtere Sanktionen bei Wiederholungstätern.</li>
+                    <li data-i18n="prog_int_3">Videoüberwachung an Brennpunkten wie dem Görlitzer Park.</li>
+                    <li data-i18n="prog_int_4">Erhöhte Polizeipräsenz im öffentlichen Raum.</li>
+                </ul>
+            </div>
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3 data-i18n="prog_edu_title">Bildung</h3>
+                <ul>
+                    <li data-i18n="prog_edu_1">1:1 iPad-Ausstattung und WLAN an allen Schulen.</li>
+                    <li data-i18n="prog_edu_2">Einrichtung von Maker-Spaces für MINT-Fächer.</li>
+                    <li data-i18n="prog_edu_3">Neugewichtung: Schriftliche Leistungen zählen mehr als mündliche.</li>
+                    <li data-i18n="prog_edu_4">Erleichterung von Klassensprüngen und Juniorstudien.</li>
+                </ul>
+            </div>
+            <div class="program-item">
+                <div class="program-icon"><i class="fas fa-heartbeat"></i></div>
+                <h3 data-i18n="prog_health_title">Pflege & Gesundheit</h3>
+                <ul>
+                    <li data-i18n="prog_health_1">Staatlich bezahlte Vorsorge-Checks zur Früherkennung.</li>
+                    <li data-i18n="prog_health_2">Automatisierung administrativer Aufgaben in Kliniken.</li>
+                    <li data-i18n="prog_health_3">Finanzielle Anreize für Schichtarbeit in der Pflege.</li>
+                    <li data-i18n="prog_health_4">Gesundheitsaufklärung ab dem Kindergarten.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="pdf-download-area">
+            <h3 style="margin-bottom: 20px; color: white;" data-i18n="pdf_title">Vollständiges Programm als PDF</h3>
+            <a href="assets/pdf/Wahlprogramm_BWP.pdf" class="submit-btn" style="text-decoration: none; display: inline-block; width: auto; padding: 15px 50px; background: white; color: var(--primary-blue);" target="_blank">
+                <i class="fas fa-file-pdf"></i> <span data-i18n="pdf_btn">PDF-LANGFASSUNG HERUNTERLADEN</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="ueber-uns" class="reveal">
+        <h2 class="section-title" data-i18n="about_title">Unsere Vision</h2>
+        <div class="about-container">
+            <div class="about-text">
+                <p class="section-subtitle" style="text-align: left; margin: 0 0 20px 0;" data-i18n="about_subtitle">
+                    Unsere Politik basiert auf vier starken Säulen und auf der Verantwortung von innovativen Menschen, die ihre Zukunft durch Leistung und Innovation sichern wollen.
+                </p>
+                <div class="ideology-grid">
+                    
+                    <div class="ideology-box">
+                        <div class="ideology-header">
+                            <div class="ideology-icon-wrapper"><i class="fas fa-hand-holding-usd"></i></div>
+                            <h4 data-i18n="ideo_1_title">Neoliberalismus</h4>
+                        </div>
+                        <div class="ideology-desc" data-i18n="ideo_1_desc">
+                            <strong>Was wir wollen:</strong> Weniger Staat, mehr Freiheit.<br>
+                            <strong>Warum es gut ist:</strong> Weil staatliche Überregulierung Innovationen erstickt. Nur freie Märkte entfesseln das volle Potenzial jedes Einzelnen.
+                        </div>
+                    </div>
+
+                    <div class="ideology-box">
+                        <div class="ideology-header">
+                            <div class="ideology-icon-wrapper"><i class="fas fa-trophy"></i></div>
+                            <h4 data-i18n="ideo_2_title">Meritokratie</h4>
+                        </div>
+                        <div class="ideology-desc" data-i18n="ideo_2_desc">
+                            <strong>Was wir wollen:</strong> Vorfahrt für Leistung.<br>
+                            <strong>Warum es gut ist:</strong> Weil Aufstieg durch Talent und harte Arbeit möglich sein muss – nicht durch Beziehungen oder Quote. Das ist wahre Gerechtigkeit.
+                        </div>
+                    </div>
+
+                    <div class="ideology-box">
+                        <div class="ideology-header">
+                            <div class="ideology-icon-wrapper"><i class="fas fa-coins"></i></div>
+                            <h4 data-i18n="ideo_3_title">Monetarismus</h4>
+                        </div>
+                        <div class="ideology-desc" data-i18n="ideo_3_desc">
+                            <strong>Was wir wollen:</strong> Stabiles Geld.<br>
+                            <strong>Warum es gut ist:</strong> Inflation ist die schleichende Enteignung der Bürger. Nur strikte Haushaltsdisziplin sichert Wohlstand und Ersparnisse für alle.
+                        </div>
+                    </div>
+
+                    <div class="ideology-box">
+                        <div class="ideology-header">
+                            <div class="ideology-icon-wrapper"><i class="fas fa-industry"></i></div>
+                            <h4 data-i18n="ideo_4_title">Supply-Side</h4>
+                        </div>
+                        <div class="ideology-desc" data-i18n="ideo_4_desc">
+                            <strong>Was wir wollen:</strong> Unternehmen stärken.<br>
+                            <strong>Warum es gut ist:</strong> Arbeitsplätze entstehen nicht durch Umverteilung, sondern durch Produktion. Geht es der Wirtschaft gut, profitieren alle durch Jobs und Steuereinnahmen.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="about-video">
+                <div class="video-box" style="padding: 0; background: black;">
+                    <video controls style="width: 100%; height: 100%; object-fit: cover;">
+                        <source src="assets/videos/Among-Us.mp4" type="video/mp4">
+                        Dein Browser unterstützt dieses Video nicht.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vorstand" class="reveal">
+        <h2 class="section-title" data-i18n="board_title">Unser Vorstand</h2>
+        <div class="vorstand-row">
+            <div class="profile">
+                <div class="img-square"><img src="assets/img/ASB.jpg" alt="Aliaksandr Safronenka" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <h4>Aliaksandr Safronenka</h4>
+                <p style="font-size: 0.8rem;"><strong data-i18n="role_chair">Vorsitz</strong></p>
+                <div class="profile-info"><p data-i18n="desc_asb">Experte für Wirtschaftspolitik und Stadtentwicklung.</p></div>
+            </div>
+            <div class="profile">
+                <div class="img-square"><img src="assets/img/TKB.jpg" alt="Thomas Klassen" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <h4>Thomas Klassen</h4>
+                <p style="font-size: 0.8rem;"><strong data-i18n="role_vice">Stellv. Vorsitz</strong></p>
+                <div class="profile-info"><p data-i18n="desc_tkb">Spezialist für Justiz und Gerichtsverfahren.</p></div>
+            </div>
+            <div class="profile">
+                <div class="img-square"><img src="assets/img/MP.jpg" alt="Maximilian-F. Pocher" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <h4>Maximilian-F. Pocher</h4>
+                <p style="font-size: 0.8rem;"><strong data-i18n="role_gen">Generalsekretär</strong></p>
+                <div class="profile-info"><p data-i18n="desc_mp">Experte für Bildung und Digitalisierung.</p></div>
+            </div>
+            <div class="profile">
+                <div class="img-square"><img src="assets/img/AK.jpg" alt="Arev Khzarijan" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <h4>Arev Khzarijan</h4>
+                <p style="font-size: 0.8rem;"><strong data-i18n="role_treas">Schatzmeisterin</strong></p>
+                <div class="profile-info"><p data-i18n="desc_ak">Spezialistin für Pflege und Medizin.</p></div>
+            </div>
+            <div class="profile">
+                <div class="img-square"><img src="assets/img/HK.jpg" alt="Hlib Kuzhilniy" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <h4>Hlib Kuzhilniy</h4>
+                <p style="font-size: 0.8rem;"><strong data-i18n="role_member">Beisitz</strong></p>
+                <div class="profile-info"><p data-i18n="desc_hk">Verantwortlich für Design und Mitgestaltung.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kontakt" class="reveal">
+        <h2 class="section-title" style="color: white;" data-i18n="contact_title">Jetzt Mitmachen</h2>
+
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h3 data-i18n="contact_sub">Teil des Wendepunkts werden</h3>
+                <p data-i18n="contact_text">
+                    Berlin braucht Menschen mit Verantwortung, Leistungswillen und Mut zur Entscheidung.
+                    Eine Mitgliedschaft bedeutet nicht nur Unterstützung, sondern aktive Mitgestaltung.
+                </p>
+
+                <ul class="contact-benefits">
+                    <li data-i18n="ben_1">Mitwirkung an Programmen und Positionen</li>
+                    <li data-i18n="ben_2">Teilnahme an internen Veranstaltungen</li>
+                    <li data-i18n="ben_3">Direkter Austausch mit dem Vorstand</li>
+                    <li data-i18n="ben_4">Aufbau politischer Verantwortung</li>
+                </ul>
+            </div>
+
+            <div class="contact-card">
+                <form action="https://formspree.io/f/mzdpggkj" method="POST">
+                    <input type="text" name="name" id="inp_name" placeholder="Vollständiger Name" required>
+                    <input type="email" name="email" id="inp_email" placeholder="E-Mail-Adresse" required>
+                    <textarea name="message" id="inp_msg" rows="4" placeholder="Warum möchten Sie Mitglied werden?"></textarea>
+                    <button type="submit" class="submit-btn" data-i18n="btn_submit">MITGLIEDSCHAFT BEANTRAGEN</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Scroll Animation
+        window.addEventListener('scroll', function() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                if (reveals[i].getBoundingClientRect().top < window.innerHeight - 150) { reveals[i].classList.add('active'); }
+            }
+        });
+        
+        // Smooth Scroll
+        document.querySelectorAll('nav a:not(.dropbtn)').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if(this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // --- Dropdown Logic ---
+        const langBtn = document.getElementById("langToggle");
+        const langMenu = document.getElementById("langMenu");
+
+        langBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            langMenu.classList.toggle("show");
+        });
+
+        window.addEventListener("click", () => {
+            if (langMenu.classList.contains("show")) {
+                langMenu.classList.remove("show");
+            }
+        });
+
+        // --- TRANSLATION LOGIC (DE / EN / RU / TR / UK / ZH) ---
+        let currentLang = 'de';
+
+        const translations = {
+            de: {
+                nav_home: "Home", nav_program: "Programm", nav_about: "Über Uns", nav_board: "Vorstand", nav_membership: "Mitgliedschaft", btn_lang: "Sprache",
+                hero_title: "Berliner Wendepunkt", hero_slogan_1: "Jetzt.", hero_slogan_2: "Wenden.", hero_slogan_3: "Berlin.",
+                hero_text: "Berlin ist Weltstadt, wird aber unter Wert regiert. Der Berliner Wendepunkt tritt an, um die Fesseln der Bürokratie zu lösen. Wir glauben nicht an Verbote, sondern an Innovation. Wir setzen nicht auf Umverteilung, sondern auf Wachstum. Unser Ziel: Eine Stadt, in der nicht die Herkunft entscheidet, sondern das Talent und der Wille zur Leistung. ",
+                program_title: "Unser Programm",
+                prog_fin_title: "Finanzen", prog_fin_1: "Gewerbesteuer-Hebesätze auf 350% reduzieren, um Investitionen anzuziehen.", prog_fin_2: "Mikrokredite von 15.000 bis 70.000 € zur Gründer-Sicherheit.", prog_fin_3: "Co-Investment-Programm nach US-Vorbild für Start-ups.", prog_fin_4: "Konsequente Einhaltung der Schuldenbremse.",
+                prog_house_title: "Wohnen (X-Quartiere)", prog_house_1: "Neue Siedlungsgebiete in Außenbezirken („X-Quartiere“).", prog_house_2: "Ansiedlung von Business Centern zur Arbeitsplatzschaffung vor Ort.", prog_house_3: "Verschlankung der Genehmigungsverfahren im Baumanagement.", prog_house_4: "Massiver Ausbau von ÖPNV und Highspeed-Internet.",
+                prog_mob_title: "Mobilität", prog_mob_1: "Technologieoffenheit: Keine Verbote von Antriebsarten.", prog_mob_2: "Fertigstellung der A100 zur Entlastung der Innenstadt.", prog_mob_3: "Testfelder für autonomes Fahren im Stadtgebiet.", prog_mob_4: "Öffnung des ÖPNV für privaten Wettbewerb.",
+                prog_int_title: "Inneres & Justiz", prog_int_1: "Modernisierung der Justiz zur Beschleunigung von Verfahren.", prog_int_2: "Härtere Sanktionen bei Wiederholungstätern.", prog_int_3: "Videoüberwachung an Brennpunkten wie dem Görlitzer Park.", prog_int_4: "Erhöhte Polizeipräsenz im öffentlichen Raum.",
+                prog_edu_title: "Bildung", prog_edu_1: "1:1 iPad-Ausstattung und WLAN an allen Schulen.", prog_edu_2: "Einrichtung von Maker-Spaces für MINT-Fächer.", prog_edu_3: "Neugewichtung: Schriftliche Leistungen zählen mehr als mündliche.", prog_edu_4: "Erleichterung von Klassensprüngen und Juniorstudien.",
+                prog_health_title: "Pflege & Gesundheit", prog_health_1: "Staatlich bezahlte Vorsorge-Checks zur Früherkennung.", prog_health_2: "Automatisierung administrativer Aufgaben in Kliniken.", prog_health_3: "Finanzielle Anreize für Schichtarbeit in der Pflege.", prog_health_4: "Gesundheitsaufklärung ab dem Kindergarten.",
+                pdf_title: "Vollständiges Programm als PDF", pdf_btn: "PDF-LANGFASSUNG HERUNTERLADEN",
+                about_title: "Unsere Vision", about_subtitle: "Unsere Politik basiert auf vier starken Säulen und auf der Verantwortung von innovativen Menschen, die ihre Zukunft durch Leistung und Innovation sichern wollen.",
+                ideo_1_title: "Neoliberalismus", ideo_1_desc: "<strong>Was wir wollen:</strong> Weniger Staat, mehr Freiheit.<br><strong>Warum es gut ist:</strong> Weil staatliche Überregulierung Innovationen erstickt. Nur freie Märkte entfesseln das volle Potenzial jedes Einzelnen.",
+                ideo_2_title: "Meritokratie", ideo_2_desc: "<strong>Was wir wollen:</strong> Vorfahrt für Leistung.<br><strong>Warum es gut ist:</strong> Weil Aufstieg durch Talent und harte Arbeit möglich sein muss – nicht durch Beziehungen oder Quote. Das ist wahre Gerechtigkeit.",
+                ideo_3_title: "Monetarism", ideo_3_desc: "<strong>Was wir wollen:</strong> Stabiles Geld.<br><strong>Warum es gut ist:</strong> Inflation ist die schleichende Enteignung der Bürger. Nur strikte Haushaltsdisziplin sichert Wohlstand und Ersparnisse für alle.",
+                ideo_4_title: "Supply-Side", ideo_4_desc: "<strong>Was wir wollen:</strong> Unternehmen stärken.<br><strong>Warum es gut ist:</strong> Arbeitsplätze entstehen nicht durch Umverteilung, sondern durch Produktion. Geht es der Wirtschaft gut, profitieren alle durch Jobs und Steuereinnahmen.",
+                video_caption: "Vision ansehen", board_title: "Unser Vorstand",
+                role_chair: "Vorsitz", desc_asb: "Experte für Wirtschaftspolitik und Stadtentwicklung.",
+                role_vice: "Stellv. Vorsitz", desc_tkb: "Spezialist für Justiz und Gerichtsverfahren.",
+                role_gen: "Generalsekretär", desc_mp: "Experte für Bildung und Digitalisierung.",
+                role_treas: "Schatzmeisterin", desc_ak: "Spezialistin für Pflege und Medizin.",
+                role_member: "Beisitz", desc_hk: "Verantwortlich für Design und Mitgestaltung.",
+                contact_title: "Jetzt Mitmachen", contact_sub: "Teil des Wendepunkts werden", contact_text: "Berlin braucht Menschen mit Verantwortung, Leistungswillen und Mut zur Entscheidung. Eine Mitgliedschaft bedeutet nicht nur Unterstützung, sondern aktive Mitgestaltung.",
+                ben_1: "Mitwirkung an Programmen und Positionen", ben_2: "Teilnahme an internen Veranstaltungen", ben_3: "Direkter Austausch mit dem Vorstand", ben_4: "Aufbau politischer Verantwortung", btn_submit: "MITGLIEDSCHAFT BEANTRAGEN",
+                ph_name: "Vollständiger Name", ph_email: "E-Mail-Adresse", ph_msg: "Warum möchten Sie Mitglied werden?"
+            },
+            en: {
+                nav_home: "Home", nav_program: "Program", nav_about: "About Us", nav_board: "Board", nav_membership: "Membership", btn_lang: "Language",
+                hero_title: "Berlin Turning Point", hero_slogan_1: "Now.", hero_slogan_2: "Turn.", hero_slogan_3: "Berlin.",
+                hero_text: "Berlin is a world city but governed below its potential. The Berliner Wendepunkt is here to break the shackles of bureaucracy. We do not believe in bans, but in innovation. We do not rely on redistribution, but on growth. Our goal: A city where origin does not decide, but talent and the will to perform do. ",
+                program_title: "Our Program",
+                prog_fin_title: "Finance", prog_fin_1: "Reduce trade tax rates to 350% to attract investment.", prog_fin_2: "Microloans from €15,000 to €70,000 for founder security.", prog_fin_3: "Co-investment program for start-ups modeled after the US.", prog_fin_4: "Strict adherence to the debt brake.",
+                prog_house_title: "Housing (X-Quarters)", prog_house_1: "New settlement areas in outer districts ('X-Quarters').", prog_house_2: "Establishment of business centers to create local jobs.", prog_house_3: "Streamlining approval procedures in construction management.", prog_house_4: "Massive expansion of public transport and high-speed internet.",
+                prog_mob_title: "Mobility", prog_mob_1: "Technology openness: No bans on drive types.", prog_mob_2: "Completion of the A100 to relieve the city center.", prog_mob_3: "Test fields for autonomous driving in the urban area.", prog_mob_4: "Opening public transport to private competition.",
+                prog_int_title: "Interior & Justice", prog_int_1: "Modernization of the judiciary to accelerate proceedings.", prog_int_2: "Harsher sanctions for repeat offenders.", prog_int_3: "Video surveillance at hotspots like Görlitzer Park.", prog_int_4: "Increased police presence in public spaces.",
+                prog_edu_title: "Education", prog_edu_1: "1:1 iPad equipment and Wi-Fi in all schools.", prog_edu_2: "Establishment of maker spaces for STEM subjects.", prog_edu_3: "Rebalancing: Written performance counts more than oral.", prog_edu_4: "Facilitation of grade skipping and junior studies.",
+                prog_health_title: "Care & Health", prog_health_1: "State-paid preventive checks for early detection.", prog_health_2: "Automation of administrative tasks in clinics.", prog_health_3: "Financial incentives for shift work in care.", prog_health_4: "Health education starting from kindergarten.",
+                pdf_title: "Complete Program as PDF", pdf_btn: "DOWNLOAD FULL PDF",
+                about_title: "Our Vision", about_subtitle: "Our politics are based on four strong pillars and the responsibility of innovative people who want to secure their future through performance and innovation.",
+                ideo_1_title: "Neoliberalism", ideo_1_desc: "<strong>What we want:</strong> Less state, more freedom.<br><strong>Why it's good:</strong> Because state over-regulation stifles innovation. Only free markets unleash the full potential of every individual.",
+                ideo_2_title: "Meritocracy", ideo_2_desc: "<strong>What we want:</strong> Priority for performance.<br><strong>Why it's good:</strong> Advancement must be possible through talent and hard work – not connections or quotas. That is true justice.",
+                ideo_3_title: "Monetarism", ideo_3_desc: "<strong>What we want:</strong> Stable money.<br><strong>Why it's good:</strong> Inflation is the creeping expropriation of citizens. Only strict fiscal discipline ensures prosperity and savings for everyone.",
+                ideo_4_title: "Supply-Side", ideo_4_desc: "<strong>What we want:</strong> Strengthen companies.<br><strong>Why it's good:</strong> Jobs are not created by redistribution, but by production. If the economy does well, everyone benefits through jobs and tax revenues.",
+                video_caption: "Watch Vision", board_title: "Our Board",
+                role_chair: "Chairman", desc_asb: "Expert in economic policy and urban development.", role_vice: "Vice Chairman", desc_tkb: "Specialist in justice and legal proceedings.", role_gen: "General Secretary", desc_mp: "Expert in education and digitalization.", role_treas: "Treasurer", desc_ak: "Specialist in nursing and medicine.", role_member: "Assessor", desc_hk: "Responsible for design and co-creation.",
+                contact_title: "Join Now", contact_sub: "Become part of the Wendepunkt", contact_text: "Berlin needs people with responsibility, will to perform, and courage to decide. Membership means not just support, but active participation.",
+                ben_1: "Participation in programs and positions", ben_2: "Participation in internal events", ben_3: "Direct exchange with the board", ben_4: "Building political responsibility", btn_submit: "APPLY FOR MEMBERSHIP",
+                ph_name: "Full Name", ph_email: "Email Address", ph_msg: "Why do you want to become a member?"
+            },
+            ru: {
+                nav_home: "Главная", nav_program: "Программа", nav_about: "О нас", nav_board: "Правление", nav_membership: "Членство", btn_lang: "Язык",
+                hero_title: "Berliner Wendepunkt", hero_slogan_1: "Сейчас.", hero_slogan_2: "Поворот.", hero_slogan_3: "Берлин.",
+                hero_text: "Берлин — мировой город, но управляется ниже своего потенциала. Berliner Wendepunkt создан, чтобы сбросить оковы бюрократии. Мы верим не в запреты, а в инновации. Мы ставим не на перераспределение, а на рост. Наша цель: город, где решает не происхождение, а талант и воля к достижениям. ",
+                program_title: "Наша программа",
+                prog_fin_title: "Финансы", prog_fin_1: "Снижение ставки торгового налога до 350% для привлечения инвестиций.", prog_fin_2: "Микрокредиты от 15 000 до 70 000 евро для безопасности основателей.", prog_fin_3: "Программа соинвестирования для стартапов по образцу США.", prog_fin_4: "Строгое соблюдение долгового тормоза.",
+                prog_house_title: "Жилье (X-Quartiere)", prog_house_1: "Новые жилые районы на окраинах («X-Quartiere»).", prog_house_2: "Создание бизнес-центров для рабочих мест на местах.", prog_house_3: "Упрощение процедур утверждения в строительстве.", prog_house_4: "Масштабное расширение общественного транспорта и высокоскоростного интернета.",
+                prog_mob_title: "Мобильность", prog_mob_1: "Технологическая открытость: никаких запретов на типы двигателей.", prog_mob_2: "Завершение строительства A100 для разгрузки центра города.", prog_mob_3: "Тестовые зоны для автономного вождения в черте города.", prog_mob_4: "Открытие общественного транспорта для частной конкуренции.",
+                prog_int_title: "Внутренние дела и юстиция", prog_int_1: "Модернизация судебной системы для ускорения процессов.", prog_int_2: "Более жесткие санкции для рецидивистов.", prog_int_3: "Видеонаблюдение в горячих точках, таких как Гёрлицер парк.", prog_int_4: "Увеличение присутствия полиции в общественных местах.",
+                prog_edu_title: "Образование", prog_edu_1: "Оснащение 1:1 iPad и Wi-Fi во всех школах.", prog_edu_2: "Создание мейкерспейсов для предметов STEM.", prog_edu_3: "Новый баланс: письменные работы важнее устных.", prog_edu_4: "Упрощение переходов через классы и раннего обучения в вузах.",
+                prog_health_title: "Уход и здоровье", prog_health_1: "Оплачиваемые государством профилактические осмотры.", prog_health_2: "Автоматизация административных задач в клиниках.", prog_health_3: "Финансовые стимулы для сменной работы в уходе.", prog_health_4: "Медицинское просвещение начиная с детского сада.",
+                pdf_title: "Полная программа в PDF", pdf_btn: "СКАЧАТЬ ПОЛНЫЙ PDF",
+                about_title: "Наше видение", about_subtitle: "Наша политика основана на четырех сильных столпах и ответственности новаторов, которые хотят обеспечить свое будущее через достижения и инновации.",
+                ideo_1_title: "Неолиберализм", ideo_1_desc: "<strong>Чего мы хотим:</strong> Меньше государства, больше свободы.<br><strong>Почему это хорошо:</strong> Потому что государственное регулирование душит инновации. Только свободные рынки раскрывают полный потенциал каждого.",
+                ideo_2_title: "Меритократия", ideo_2_desc: "<strong>Чего мы хотим:</strong> Приоритет достижениям.<br><strong>Почему это хорошо:</strong> Подъем должен быть возможен благодаря таланту и труду, а не связям или квотам. Это истинная справедливость.",
+                ideo_3_title: "Монетаризм", ideo_3_desc: "<strong>Чего мы хотим:</strong> Стабильные деньги.<br><strong>Почему это хорошо:</strong> Инфляция — это ползучая экспроприация граждан. Только строгая бюджетная дисциплина обеспечивает благосостояние и сбережения для всех.",
+                ideo_4_title: "Экономика предложения", ideo_4_desc: "<strong>Чего мы хотим:</strong> Усиление компаний.<br><strong>Почему это хорошо:</strong> Рабочие места создаются не перераспределением, а производством. Если экономика процветает, выигрывают все благодаря рабочим местам и налогам.",
+                video_caption: "Смотреть видение", board_title: "Наше правление",
+                role_chair: "Председатель", desc_asb: "Эксперт по экономической политике и городскому развитию.", role_vice: "Зам. председателя", desc_tkb: "Специалист по юстиции и судебным процессам.", role_gen: "Генеральный секретарь", desc_mp: "Эксперт по образованию и цифровизации.", role_treas: "Казначей", desc_ak: "Специалист по уходу и медицине.", role_member: "Асессор", desc_hk: "Ответственный за дизайн и сотворчество.",
+                contact_title: "Присоединяйтесь", contact_sub: "Станьте частью Wendepunkt", contact_text: "Берлину нужны люди с ответственностью, волей к достижениям и смелостью принимать решения. Членство означает не только поддержку, но и активное участие.",
+                ben_1: "Участие в программах и позициях", ben_2: "Участие во внутренних мероприятиях", ben_3: "Прямой обмен с правлінням", ben_4: "Формирование политической ответственности", btn_submit: "ПОДАТЬ ЗАЯВКУ НА ЧЛЕНСТВО",
+                ph_name: "Полное имя", ph_email: "Адрес электронной почты", ph_msg: "Почему вы хотите стать членом?"
+            },
+            tr: {
+                nav_home: "Anasayfa", nav_program: "Program", nav_about: "Hakkımızda", nav_board: "Yönetim", nav_membership: "Üyelik", btn_lang: "Dil",
+                hero_title: "Berliner Wendepunkt", hero_slogan_1: "Şimdi.", hero_slogan_2: "Dönüşüm.", hero_slogan_3: "Berlin.",
+                hero_text: "Berlin bir dünya şehridir ancak potansiyelinin altında yönetilmektedir. Berliner Wendepunkt, bürokrasinin zincirlerini kırmak için burada. Yasaklara değil, inovasyona inanıyoruz. Yeniden dağıtıma değil, büyümeye odaklanıyoruz. Hedefimiz: Kökenin değil, yeteneğin ve başarı iradesinin belirleyici olduğu bir şehir. ",
+                program_title: "Programımız",
+                prog_fin_title: "Finans", prog_fin_1: "Yatırımları çekmek için ticaret vergisi oranlarını %350'ye düşürmek.", prog_fin_2: "Girişimci güvenliği için 15.000 ila 70.000 € arası mikro krediler.", prog_fin_3: "Start-up'lar için ABD modeline dayalı ortak yatırım programı.", prog_fin_4: "Borç frenine sıkı sıkıya bağlılık.",
+                prog_house_title: "Konut (X-Bölgeleri)", prog_house_1: "Dış ilçelerde yeni yerleşim bölgeleri ('X-Bölgeleri').", prog_house_2: "Yerinde iş imkanı yaratmak için iş merkezlerinin kurulması.", prog_house_3: "İnşaat yönetiminde onay süreçlerinin basitleştirilmesi.", prog_house_4: "Toplu taşıma ve yüksek hızlı internetin kitlesel olarak genişletilmesi.",
+                prog_mob_title: "Mobilite", prog_mob_1: "Teknoloji açıklığı: Tahrik türlerinde yasak yok.", prog_mob_2: "Şehir merkezini rahatlatmak için A100'ün tamamlanması.", prog_mob_3: "Şehir bölgesinde otonom sürüş test alanları.", prog_mob_4: "Toplu taşımanın özel rekabete açılması.",
+                prog_int_title: "İçişleri ve Adalet", prog_int_1: "Yargılamaları hızlandırmak için yargının modernizasyonu.", prog_int_2: "Tekerrür eden suçlular için daha ağır yaptırımlar.", prog_int_3: "Görlitzer Park gibi sıcak noktalarda video gözetimi.", prog_int_4: "Kamusal alanlarda artırılmış polis varlığı.",
+                prog_edu_title: "Eğitim", prog_edu_1: "Tüm okullarda 1:1 iPad donanımı ve Wi-Fi.", prog_edu_2: "STEM dersleri için maker alanlarının kurulması.", prog_edu_3: "Yeni denge: Yazılı performans sözlüden daha önemli.", prog_edu_4: "Sınıf atlama ve erken üniversite çalışmalarının kolaylaştırılması.",
+                prog_health_title: "Bakım ve Sağlık", prog_health_1: "Erken teşhis için devlet tarafından ödenen önleyici kontroller.", prog_health_2: "Kliniklerde idari görevlerin otomasyonu.", prog_health_3: "Bakım sektöründe vardiyalı çalışma için finansal teşvikler.", prog_health_4: "Anaokulundan itibaren sağlık eğitimi.",
+                pdf_title: "Tam Program PDF Olarak", pdf_btn: "TAM PDF'Yİ İNDİR",
+                about_title: "Vizyonumuz", about_subtitle: "Politikamız dört güçlü sütuna ve geleceklerini performans ve inovasyonla güvence altına almak isteyen yenilikçi insanların sorumluluğuna dayanmaktadır.",
+                ideo_1_title: "Neoliberalizm", ideo_1_desc: "<strong>Ne istiyoruz:</strong> Daha az devlet, daha fazla özgürlük.<br><strong>Neden iyi:</strong> Çünkü aşırı devlet düzenlemeleri inovasyonu boğar. Sadece serbest piyasalar her bireyin tam potansiyelini ortaya çıkarır.",
+                ideo_2_title: "Meritokrasi", ideo_2_desc: "<strong>Ne istiyoruz:</strong> Başarıya öncelik.<br><strong>Neden iyi:</strong> Yükselmek yetenek ve çok çalışma ile mümkün olmalıdır – ilişkiler veya kotalarla değil. Gerçek adalet budur.",
+                ideo_3_title: "Monetarism", ideo_3_desc: "<strong>Ne istiyoruz:</strong> İstikrarlı para.<br><strong>Neden iyi:</strong> Enflasyon, vatandaşların sinsi bir şekilde mülksüzleştirilmesidir. Sadece sıkı mali disiplin herkes için refah ve tasarruf sağlar.",
+                ideo_4_title: "Arz Yanlı İktisat", ideo_4_desc: "<strong>Ne istiyoruz:</strong> Şirketleri güçlendirmek.<br><strong>Neden iyi:</strong> İşler yeniden dağıtımla değil, üretimle yaratılır. Ekonomi iyi giderse, işler ve vergi gelirleri sayesinde herkes kazanır.",
+                video_caption: "Vizyonu İzle", board_title: "Yönetim Kurulumuz",
+                role_chair: "Başkan", desc_asb: "Ekonomi politikası ve kentsel gelişim uzmanı.", role_vice: "Başkan Yardımcısı", desc_tkb: "Adalet ve yasal süreçler uzmanı.", role_gen: "Genel Sekreter", desc_mp: "Eğitim ve dijitalleşme uzmanı.", role_treas: "Sayman", desc_ak: "Hemşirelik ve tıp uzmanı.", role_member: "Üye", desc_hk: "Tasarım ve ortak yaratımdan sorumlu.",
+                contact_title: "Şimdi Katıl", contact_sub: "Wendepunkt'un Parçası Ol", contact_text: "Berlin'in sorumluluk sahibi, başarma iradesi olan ve karar verme cesaretine sahip insanlara ihtiyacı var. Üyelik sadece destek değil, aktif katılım anlamına gelir.",
+                ben_1: "Program ve pozisyonlara katılım", ben_2: "Dahili etkinliklere katılım", ben_3: "Yönetim kurulu ile doğrudan iletişim", ben_4: "Siyasi sorumluluk oluşturma", btn_submit: "ÜYELİK BAŞVURUSU YAP",
+                ph_name: "Ad Soyad", ph_email: "E-Posta Adresi", ph_msg: "Neden üye olmak istiyorsunuz?"
+            },
+            uk: {
+                nav_home: "Головна", nav_program: "Програма", nav_about: "Про нас", nav_board: "Правління", nav_membership: "Членство", btn_lang: "Мова",
+                hero_title: "Berliner Wendepunkt", hero_slogan_1: "Зараз.", hero_slogan_2: "Поворот.", hero_slogan_3: "Берлін.",
+                hero_text: "Берлін — світове місто, але керується нижче свого потенціалу. Berliner Wendepunkt створений, щоб скинути кайдани бюрократії. Ми віримо не в заборони, а в інновації. Ми ставимо не на перерозподіл, а на зростання. Наша мета: місто, де вирішує не походження, а талант і воля до досягнень. ",
+                program_title: "Наша програма",
+                prog_fin_title: "Фінанси", prog_fin_1: "Зниження ставки торгового податку до 350% для залучення інвестицій.", prog_fin_2: "Мікрокредити від 15 000 до 70 000 євро для безпеки засновників.", prog_fin_3: "Програма співінвестування для стартапів за зразком США.", prog_fin_4: "Суворе дотримання боргового гальма.",
+                prog_house_title: "Житло (X-Quartiere)", prog_house_1: "Нові житлові райони на околицях («X-Quartiere»).", prog_house_2: "Створення бізнес-центрів для робочих місць на місцях.", prog_house_3: "Спрощення процедур затвердження в будівництві.", prog_house_4: "Масштабне розширення громадського транспорту та високошвидкісного інтернету.",
+                prog_mob_title: "Мобільність", prog_mob_1: "Технологічна відкритість: жодних заборон на типи двигунів.", prog_mob_2: "Завершення будівництва A100 для розвантаження центру міста.", prog_mob_3: "Тестовые зоны для автономного водіння в межах міста.", prog_mob_4: "Відкриття громадського транспорту для приватної конкуренції.",
+                prog_int_title: "Внутрішні справи та юстиція", prog_int_1: "Модернізація судової системи для прискорення процесів.", prog_int_2: "Більш жорсткі санкції для рецидивістів.", prog_int_3: "Відеоспостереження в гарячих точках, таких як Герліцер парк.", prog_int_4: "Збільшення присутності поліції в громадських місцях.",
+                prog_edu_title: "Освіта", prog_edu_1: "Оснащення 1:1 iPad та Wi-Fi у всіх школах.", prog_edu_2: "Створення мейкерспейсів для предметів STEM.", prog_edu_3: "Новий баланс: письмові роботи важливіші за усні.", prog_edu_4: "Спрощення переходів через класи та раннього навчання у вишах.",
+                prog_health_title: "Догляд та здоров'я", prog_health_1: "Оплачувані державою профілактичні огляди.", prog_health_2: "Автоматизація адміністративних завдань у клініках.", prog_health_3: "Фінансові стимули для змінної роботи в догляді.", prog_health_4: "Медична освіта починаючи з дитячого садка.",
+                pdf_title: "Повна програма у PDF", pdf_btn: "ЗАВАНТАЖИТИ ПОВНИЙ PDF",
+                about_title: "Наше бачення", about_subtitle: "Наша політика базується на чотирьох сильних стовпах і відповідальності новаторів, які хочуть забезпечити своє майбутнє через досягнення та інновації.",
+                ideo_1_title: "Неолібералізм", ideo_1_desc: "<strong>Чого ми хочемо:</strong> Менше держави, більше свободи.<br><strong>Чому це добре:</strong> Тому що державне регулювання душить інновації. Тільки вільні ринки розкривають повний потенціал кожного.",
+                ideo_2_title: "Меритократія", ideo_2_desc: "<strong>Чого ми хочемо:</strong> Пріоритет досягненням.<br><strong>Чому це добре:</strong> Підйом повинен бути можливим завдяки таланту і праці, а не зв'язкам або квотам. Це справжня справедливість.",
+                ideo_3_title: "Монетаризм", ideo_3_desc: "<strong>Чого ми хочемо:</strong> Стабільні гроші.<br><strong>Чому це добре:</strong> Інфляція — це повзуча експропріація громадян. Тільки сувора бюджетна дисципліна забезпечує добробут і заощадження для всіх.",
+                ideo_4_title: "Економіка пропозиції", ideo_4_desc: "<strong>Чого ми хочемо:</strong> Посилення компаній.<br><strong>Чому це добре:</strong> Робочі місця створюються не перерозподілом, а виробництвом. Якщо економіка процвітає, виграють усі завдяки робочим місцям і податкам.",
+                video_caption: "Дивитися бачення", board_title: "Наше правління",
+                role_chair: "Голова", desc_asb: "Експерт з економічної політики та міського розвитку.", role_vice: "Заст. голови", desc_tkb: "Спеціаліст з юстиції та судових процесів.", role_gen: "Генеральний секретарь", desc_mp: "Експерт з освіти та цифровізації.", role_treas: "Скарбник", desc_ak: "Спеціаліст з догляду та медицини.", role_member: "Член правління", desc_hk: "Відповідальний за дизайн та співтворчість.",
+                contact_title: "Приєднуйтесь", contact_sub: "Станьте частиною Wendepunkt", contact_text: "Берліну потрібні люди з відповідальністю, волею до досягнень і сміливістю приймати рішення. Членство означає не тільки підтримку, але й активну участь.",
+                ben_1: "Участь у програмах і позиціях", ben_2: "Участь у внутрішніх заходах", ben_3: "Прямий обмін з правлінням", ben_4: "Формування політичної відповідальності", btn_submit: "ПОДАТИ ЗАЯВКУ НА ЧЛЕНСТВО",
+                ph_name: "Повне ім'я", ph_email: "Адреса електронної пошти", ph_msg: "Чому ви хочете стати членом?"
+            },
+            pl: {
+                nav_home: "Strona główna", nav_program: "Program", nav_about: "O nas", nav_board: "Zarząd", nav_membership: "Członkostwo", btn_lang: "Język",
+                hero_title: "Berliner Wendepunkt", hero_slogan_1: "Teraz.", hero_slogan_2: "Zwrot.", hero_slogan_3: "Berlin.",
+                hero_text: "Berlin jest metropolią, ale jest zarządzany poniżej swojego potencjału. Berliner Wendepunkt powstał, aby zerwać kajdany biurokracji. Nie wierzymy w zakazy, lecz w innowacje. Nie stawiamy na redystrybucję, lecz na wzrost. Nasz cel: Miasto, w którym o sukcesie nie decyduje pochodzenie, lecz talent i wola osiągnięć.",
+                program_title: "Nasz Program",
+                prog_fin_title: "Finanse", prog_fin_1: "Obniżenie stawki podatku handlowego do 350%, aby przyciągnąć inwestycje.", prog_fin_2: "Mikrokredyty od 15 000 do 70 000 euro dla bezpieczeństwa założycieli firm.", prog_fin_3: "Program współinwestowania dla start-upów wzorowany na modelu z USA.", prog_fin_4: "Konsekwentne przestrzeganie hamulca zadłużenia.",
+                prog_house_title: "Mieszkalnictwo (Dzielnice-X)", prog_house_1: "Nowe osiedla na obrzeżach („Dzielnice-X”).", prog_house_2: "Tworzenie centrów biznesowych w celu generowania miejsc pracy na miejscu.", prog_house_3: "Uproszczenie procedur zatwierdzania w zarządzaniu budową.", prog_house_4: "Masowa rozbudowa transportu publicznego i szybkiego internetu.",
+                prog_mob_title: "Mobilność", prog_mob_1: "Otwartość technologiczna: Brak zakazów dla rodzajów napędów.", prog_mob_2: "Ukończenie autostrady A100 w celu odciążenia centrum miasta.", prog_mob_3: "Poligony testowe dla autonomicznej jazdy na terenie miasta.", prog_mob_4: "Otwarcie transportu publicznego na prywatną konkurencję.",
+                prog_int_title: "Sprawy Wewnętrzne i Sprawiedliwość", prog_int_1: "Modernizacja sądownictwa w celu przyspieszenia postępowań.", prog_int_2: "Surowsze sankcje dla recydywistów.", prog_int_3: "Monitoring wizyjny w newralgicznych punktach, takich jak Park Görlitzer.", prog_int_4: "Zwiększona obecność policji w przestrzeni publicznej.",
+                prog_edu_title: "Edukacja", prog_edu_1: "Wyposażenie 1:1 w iPady i Wi-Fi we wszystkich szkołach.", prog_edu_2: "Tworzenie przestrzeni twórczych (Maker-Spaces) dla przedmiotów ścisłych.", prog_edu_3: "Nowe wyważenie: Wyniki pisemne liczą się bardziej niż ustne.", prog_edu_4: "Ułatwienie przeskakiwania klas i wczesnych studiów.",
+                prog_health_title: "Opieka i Zdrowie", prog_health_1: "Opłacane przez państwo badania profilaktyczne w celu wczesnego wykrywania chorób.", prog_health_2: "Automatyzacja zadań administracyjnych w klinikach.", prog_health_3: "Zachęty finansowe za pracę zmianową w opiece.", prog_health_4: "Edukacja zdrowotna od przedszkola.",
+                pdf_title: "Pełny program w formacie PDF", pdf_btn: "POBIERZ PEŁNY PDF",
+                about_title: "Nasza Wizja", about_subtitle: "Nasza polityka opiera się na czterech silnych filarach i odpowiedzialności innowacyjnych ludzi, którzy chcą zabezpieczyć swoją przyszłość poprzez osiągnięcia i innowacje.",
+                ideo_1_title: "Neoliberalizm", ideo_1_desc: "<strong>Czego chcemy:</strong> Mniej państwa, więcej wolności.<br><strong>Dlaczego to jest dobre:</strong> Ponieważ nadmierna regulacja państwowa dusi innowacje. Tylko wolne rynki uwalniają pełny potencjał każdej jednostki.",
+                ideo_2_title: "Merytokracja", ideo_2_desc: "<strong>Czego chcemy:</strong> Pierwszeństwo dla osiągnięć.<br><strong>Dlaczego to jest dobre:</strong> Awans musi być możliwy dzięki talentowi i ciężkiej pracy – a nie dzięki koneksjom czy parytetom. To jest prawdziwa sprawiedliwość.",
+                ideo_3_title: "Monetaryzm", ideo_3_desc: "<strong>Czego chcemy:</strong> Stabilnego pieniądza.<br><strong>Dlaczego to jest dobre:</strong> Inflacja to pełzające wywłaszczenie obywateli. Tylko ścisła dyscyplina budżetowa zapewnia dobrobyt i oszczędności dla wszystkich.",
+                ideo_4_title: "Ekonomia Podaży", ideo_4_desc: "<strong>Czego chcemy:</strong> Wzmocnienia przedsiębiorstw.<br><strong>Dlaczego to jest dobre:</strong> Miejsca pracy nie powstają z redystrybucji, lecz z produkcji. Jeśli gospodarce wiedzie się dobrze, wszyscy korzystają dzięki miejscom pracy i wpływom z podatków.",
+                video_caption: "Obejrzyj wizję", board_title: "Nasz Zarząd",
+                role_chair: "Przewodniczący", desc_asb: "Ekspert ds. polityki gospodarczej i rozwoju miast.", role_vice: "Wiceprzewodniczący", desc_tkb: "Specjalista ds. wymiaru sprawiedliwości i postępowań sądowych.", role_gen: "Sekretarz Generalny", desc_mp: "Ekspert ds. edukacji i cyfryzacji.", role_treas: "Skarbnik", desc_ak: "Specjalistka ds. opieki i medycyny.", role_member: "Członek Zarządu", desc_hk: "Odpowiedzialny za design i współtworzenie.",
+                contact_title: "Dołącz Teraz", contact_sub: "Zostań częścią Wendepunkt", contact_text: "Berlin potrzebuje ludzi z poczuciem odpowiedzialności, wolą osiągnięć i odwagą do podejmowania decyzji. Członkostwo oznacza nie tylko wsparcie, ale aktywne współtworzenie.",
+                ben_1: "Udział w tworzeniu programów i stanowisk", ben_2: "Udział w wydarzeniach wewnętrznych", ben_3: "Bezpośrednia wymiana z zarządem", ben_4: "Budowanie odpowiedzialności politycznej", btn_submit: "ZŁÓŻ WNIOSEK O CZŁONKOSTWO",
+                ph_name: "Pełne imię i nazwisko", ph_email: "Adres e-mail", ph_msg: "Dlaczego chcesz zostać członkiem?"
+            }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            
+            // 1. Text Update
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if(translations[lang][key].includes('<')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.innerText = translations[lang][key];
+                    }
+                }
+            });
+
+            // 2. Placeholder Update
+            document.getElementById('inp_name').placeholder = translations[lang].ph_name;
+            document.getElementById('inp_email').placeholder = translations[lang].ph_email;
+            document.getElementById('inp_msg').placeholder = translations[lang].ph_msg;
+
+            // 3. Highlight Selected Language in Menu (Yellow Line)
+            const menuBtns = document.querySelectorAll('#langMenu button');
+            menuBtns.forEach(btn => btn.classList.remove('active-lang'));
+            
+            menuBtns.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(`'${lang}'`)) {
+                    btn.classList.add('active-lang');
+                }
+            });
+
+            // Close menu
+            langMenu.classList.remove("show");
+        }
+    </script>
+</body>
+</html>
