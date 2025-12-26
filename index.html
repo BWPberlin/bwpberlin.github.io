@@ -1097,7 +1097,7 @@
                     <div class="video-box">
                         <video controls style="width: 100%; height: 100%; object-fit: cover;">
                             <source src="assets/videos/Among-Us.mp4" type="video/mp4">
-                            Dein Browser unterstützt dieses Video nicht.
+                            <span data-i18n="video_error">Dein Browser unterstützt dieses Video nicht.</span>
                         </video>
                     </div>
                     <div style="padding: 15px 10px 5px 10px; text-align: center;">
@@ -1284,7 +1284,7 @@
                         <textarea name="message" id="inp_msg" rows="5" placeholder="Warum möchten Sie Mitglied werden? Welches Thema bewegt Sie am meisten?" required></textarea>
                         
                         <button type="submit" class="submit-btn" data-i18n="btn_submit">MITGLIEDSCHAFT BEANTRAGEN</button>
-                        <p style="font-size: 0.8rem; color: #999; margin-top: 15px; text-align: center;">
+                        <p style="font-size: 0.8rem; color: #999; margin-top: 15px; text-align: center;" data-i18n="privacy_notice">
                             Ihre Daten werden vertraulich behandelt und nur für den Aufnahmeprozess verwendet.
                         </p>
                     </form>
@@ -1567,13 +1567,13 @@ const translations = {
             board_intro: "Der Berliner Wendepunkt wird von Menschen geführt, die Expertise aus der Praxis mit politischem Mut vereinen. Keine Berufspolitiker, sondern Experten, die Verantwortung übernehmen.",
             
             role_chair: "Vorsitzender", 
-            desc_asb: "Als Experte für Wirtschaftspolitik und Stadtentwicklung steht er für den klaren Kurs der Erneuerung.",
+            desc_asb: "Als Experte für Wirtschaftspolitik und Stadtentwicklung steht er für den klaren Kurs der Erneuerung. Seine Vision ist ein Berlin, das Investoren anzieht statt abschreckt und in dem Leistungsträger ein Zuhause finden. Er treibt die Agenda der Entbürokratisierung maßgeblich voran.",
             role_vice: "Stellv. Vorsitzender", 
-            desc_tkb: "Thomas Klassen ist unser Spezialist für Justiz und Rechtsstaatlichkeit.",
+            desc_tkb: "Thomas Klassen ist unser Spezialist für Justiz und Rechtsstaatlichkeit. Er setzt sich kompromisslos für die Beschleunigung von Gerichtsverfahren und die konsequente Anwendung geltenden Rechts ein. Sicherheit ist für ihn die Basis jeder Freiheit.",
             role_gen: "Generalsekretär", 
-            desc_mp: "Bildung und Digitalisierung sind seine Kernthemen.",
+            desc_mp: "Bildung und Digitalisierung sind seine Kernthemen. Als Generalsekretär organisiert er nicht nur die Partei, sondern kämpft für das 1:1 iPad-Programm an Schulen. Er will das Berliner Bildungssystem aus dem Kreidezeitalter in die Zukunft führen.",
             role_treas: "Schatzmeisterin", 
-            desc_ak: "Mit ihrer Expertise in Pflege und Medizin bringt sie die menschliche Perspektive ein.",
+            desc_ak: "Mit ihrer Expertise in Pflege und Medizin bringt Arev Khzarijan die menschliche Perspektive in die harten Zahlen. Sie verwaltet nicht nur die Finanzen, sondern entwickelt unsere Konzepte zur Entbürokratisierung im Gesundheitswesen und zur besseren Bezahlung von Pflegekräften.",
             role_member: "Beisitzer", 
             desc_hk: "Verantwortlich für Design und Kommunikation. Hlib sorgt dafür, dass unsere Botschaften klar, modern und verständlich bei den Bürgern ankommen. Er steht für den frischen Wind und die Innovationskraft, die der Berliner Wendepunkt verkörpert.",
             
@@ -1603,7 +1603,12 @@ const translations = {
             ph_name: "Vollständiger Name", 
             ph_email: "E-Mail-Adresse", 
             ph_phone: "Telefonnummer (Optional)", 
-            ph_msg: "Warum möchten Sie Mitglied werden? Welches Thema bewegt Sie am meisten?"
+            ph_msg: "Warum möchten Sie Mitglied werden? Welches Thema bewegt Sie am meisten?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Ihre Daten werden vertraulich behandelt und nur für den Aufnahmeprozess verwendet.",
+            video_error: "Dein Browser unterstützt dieses Video nicht.",
+            company_name: "Berliner Wendepunkt"
         },
         en: {
             nav_home: "Home", nav_program: "Program", nav_about: "About Us", nav_board: "Board", nav_membership: "Membership", btn_lang: "Language",
@@ -1692,13 +1697,13 @@ const translations = {
             board_intro: "Berliner Wendepunkt is led by people who combine practical expertise with political courage. Not career politicians, but experts who take responsibility.",
             
             role_chair: "Chairman", 
-            desc_asb: "As an expert in economic policy and urban development, he stands for the clear course of renewal.",
+            desc_asb: "As an expert in economic policy and urban development, he stands for the clear course of renewal. His vision is a Berlin that attracts investors rather than deters them, and where high performers find a home. He drives the deregulation agenda significantly forward.",
             role_vice: "Vice Chairman", 
-            desc_tkb: "Thomas Klassen is our specialist in justice and rule of law.",
+            desc_tkb: "Thomas Klassen is our specialist in justice and rule of law. He is committed without compromise to accelerating court proceedings and the consistent application of existing law. Security is for him the foundation of every freedom.",
             role_gen: "General Secretary", 
-            desc_mp: "Education and digitization are his core topics.",
+            desc_mp: "Education and digitization are his core topics. As General Secretary, he not only organizes the party, but fights for the 1:1 iPad program in schools. He wants to bring the Berlin education system out of the chalk age into the future.",
             role_treas: "Treasurer", 
-            desc_ak: "With her expertise in nursing and medicine, she brings the human perspective.",
+            desc_ak: "With her expertise in nursing and medicine, Arev Khzarijan brings the human perspective into the hard facts. She not only manages finances, but also develops our concepts for deregulation in healthcare and better compensation for nursing staff.",
             role_member: "Assessor", 
             desc_hk: "Responsible for design and communication. Hlib ensures that our messages reach citizens clearly, modernly, and understandably. He stands for the fresh wind and innovative power that the Berliner Wendepunkt embodies.",
             
@@ -1728,7 +1733,12 @@ const translations = {
             ph_name: "Full Name", 
             ph_email: "Email Address", 
             ph_phone: "Phone Number (Optional)", 
-            ph_msg: "Why do you want to become a member? Which topic matters most to you?"
+            ph_msg: "Why do you want to become a member? Which topic matters most to you?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Your data is treated confidentially and used only for the membership process.",
+            video_error: "Your browser does not support this video.",
+            company_name: "Berliner Wendepunkt"
         },
 
         tr: {
@@ -1818,13 +1828,13 @@ const translations = {
             board_intro: "Berliner Wendepunkt, pratik uzmanlığı siyasi cesaretle birleştiren insanlar tarafından yönetilmektedir. Kariyer politikacıları değil, sorumluluk alan uzmanlar.",
             
             role_chair: "Başkan", 
-            desc_asb: "Ekonomi politikası ve şehir gelişimi uzmanı olarak, yenilemenin net kursunu temsil ediyor.",
+            desc_asb: "Ekonomi politikası ve şehir gelişimi uzmanı olarak, yenilemenin net kursunu temsil ediyor. Vizyonu, yatırımcıları çeken ve yüksek performanslı kişilerin ev bulduğu bir Berlin'dir. Deregülasyon gündemini önemli ölçüde ileriye taşıyor.",
             role_vice: "Başkan Yardımcısı", 
-            desc_tkb: "Thomas Klassen, adalet ve hukuk devleti konularında uzmanımızdır.",
+            desc_tkb: "Thomas Klassen, adalet ve hukuk devleti konularında uzmanımızdır. Mahkeme işlemlerinin hızlandırılması ve mevcut hukukun tutarlı uygulanması için taviz vermeden çalışıyor. Güvenlik, onun için her özgürlüğün temelidir.",
             role_gen: "Genel Sekreter", 
-            desc_mp: "Eğitim ve dijitalleştirme onun temel konularıdır.",
+            desc_mp: "Eğitim ve dijitalleştirme onun temel konularıdır. Genel Sekreter olarak, sadece partiyi organize etmekle kalmıyor, aynı zamanda okullardaki 1:1 iPad programı için mücadele ediyor. Berliner Bildungssystem'i tebeşir çağından geleceğe taşımak istiyor.",
             role_treas: "Sayman", 
-            desc_ak: "Hemşirelik ve tıp uzmanlığı ile, insan perspektifini getiriyor.",
+            desc_ak: "Hemşirelik ve tıp uzmanlığı ile Arev Khzarijan, insan perspektifini sert gerçeklere getiriyor. Yalnızca finansı yönetmekle kalmıyor, aynı zamanda sağlık hizmetlerinde deregülasyon ve hemşirelik personelinin daha iyi ücretlendirilmesi için konseptler geliştiriyor.",
             role_member: "Üye", 
             desc_hk: "Tasarım ve iletişimden sorumlu. Hlib, mesajlarımızın vatandaşlara açık, modern ve anlaşılır bir şekilde ulaşmasını sağlıyor. Berliner Wendepunkt'u temsil eden taze rüzgarı ve yenilikçi gücü temsil ediyor.",
             
@@ -1854,7 +1864,12 @@ const translations = {
             ph_name: "Ad Soyad", 
             ph_email: "E-posta Adresi", 
             ph_phone: "Telefon Numarası (İsteğe bağlı)", 
-            ph_msg: "Neden üye olmak istiyorsunuz? Hangi konu sizi en çok etkiliyor?"
+            ph_msg: "Neden üye olmak istiyorsunuz? Hangi konu sizi en çok etkiliyor?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Verileriniz gizli olarak ele alınır ve yalnızca üyelik süreci için kullanılır.",
+            video_error: "Tarayıcınız bu videoyu desteklemiyor.",
+            company_name: "Berliner Wendepunkt"
         },
 
         ru: {
@@ -1940,13 +1955,13 @@ const translations = {
             board_intro: "Berliner Wendepunkt возглавляют люди, сочетающие практический опыт с политической смелостью. Не карьерные политики, а эксперты, берущие на себя ответственность.",
             
             role_chair: "Председатель", 
-            desc_asb: "Как эксперт в экономической политике и развитии городов, он воплощает четкий курс обновления.",
+            desc_asb: "Как эксперт в экономической политике и развитии городов, он воплощает четкий курс обновления. Его видение – Берлин, который привлекает инвесторов, а не отпугивает их, и где высокопроизводительные люди находят дом. Он значительно продвигает программу дерегулирования.",
             role_vice: "Заместитель председателя", 
-            desc_tkb: "Томас Классен – наш специалист по юстиции и верховенству закона.",
+            desc_tkb: "Томас Классен – наш специалист по юстиции и верховенству закона. Он безкомпромиссно стремится к ускорению судебных разбирательств и последовательному применению действующего права. Безопасность для него является основой любой свободы.",
             role_gen: "Генеральный секретарь", 
-            desc_mp: "Образование и цифровизация – его основные темы.",
+            desc_mp: "Образование и цифровизация – его основные темы. Как Генеральный секретарь, он не только организует партию, но и борется за программу 1:1 iPad в школах. Он хочет вывести берлинскую систему образования из эпохи мела в будущее.",
             role_treas: "Казначей", 
-            desc_ak: "Благодаря своему опыту в сфере ухода и медицины, она привносит человеческую перспективу.",
+            desc_ak: "Благодаря своему опыту в сфере ухода и медицины, Арев Хзарджан привносит человеческую перспективу в суровые факты. Она не только управляет финансами, но и разрабатывает наши концепции по дерегулированию здравоохранения и лучшему вознаграждению персонала по уходу.",
             role_member: "Ассессор", 
             desc_hk: "Отвечает за дизайн и коммуникацию. Хліб обеспечивает, чтобы наши сообщения четко, современно и понятно доходили до граждан. Он олицетворяет свежий ветер и инновационную мощь, которую воплощает Berliner Wendepunkt.",
             
@@ -1975,7 +1990,12 @@ const translations = {
             ph_name: "Полное имя", 
             ph_email: "Адрес электронной почты", 
             ph_phone: "Номер телефона (Опционально)", 
-            ph_msg: "Почему вы хотите стать членом? Какая тема вас больше всего волнует?"
+            ph_msg: "Почему вы хотите стать членом? Какая тема вас больше всего волнует?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Ваши данные обрабатываются конфиденциально и используются только для процесса членства.",
+            video_error: "Ваш браузер не поддерживает это видео.",
+            company_name: "Berliner Wendepunkt"
         },
 
         uk: {
@@ -2061,13 +2081,13 @@ const translations = {
             board_intro: "Berliner Wendepunkt керують люди, які поєднують практичний досвід з політичною сміливістю. Не карієрні політики, а експерти, які беруть на себе відповідальність.",
             
             role_chair: "Голова", 
-            desc_asb: "Як експерт з економічної політики та розвитку міст, він уособлює чіткий курс оновлення.",
+            desc_asb: "Як експерт з економічної політики та розвитку міст, він уособлює чіткий курс оновлення. Його видіння – Берлін, який привертає інвесторів, а не відлякує їх, і де високопродуктивні люди знаходять дім. Він значним чином просуває програму дерегуляції.",
             role_vice: "Заступник голови", 
-            desc_tkb: "Томас Классен – наш фахівець із юстиції та верховенства права.",
+            desc_tkb: "Томас Классен – наш фахівець із юстиції та верховенства права. Він безкомпромісно прагне прискорення судових розглядів та послідовного застосування чинного права. Безпека для нього є основою кожної свободи.",
             role_gen: "Генеральний секретар", 
-            desc_mp: "Освіта та цифровізація – його основні теми.",
+            desc_mp: "Освіта та цифровізація – його основні теми. Як Генеральний секретар, він не лише організує партію, але й борється за програму 1:1 iPad у школах. Він хоче вивести берлінську систему освіти з епохи крейди у майбутнє.",
             role_treas: "Скарбник", 
-            desc_ak: "Завдяки своєму досвіду в галузі догляду та медицини, вона привносить людську перспективу.",
+            desc_ak: "Завдяки своєму досвіду в галузі догляду та медицини, Арев Хзарджан привносить людську перспективу в суворі факти. Вона не лише управляє фінансами, але й розробляє наші концепції дерегуляції охорони здоров'я та кращої оплати персоналу з догляду.",
             role_member: "Асесор", 
             desc_hk: "Відповідальний за дизайн та комунікацію. Хліб забезпечує, щоб наші послання чітко, сучасно та зрозуміло доходили до громадян. Він уособлює свіжий вітер та інноваційну силу, яку втілює Berliner Wendepunkt.",
             
@@ -2096,7 +2116,12 @@ const translations = {
             ph_name: "Повне ім'я", 
             ph_email: "Адреса електронної пошти", 
             ph_phone: "Номер телефону (Опціонально)", 
-            ph_msg: "Чому ви хочете стати членом? Яка тема вас більше всього хвилює?"
+            ph_msg: "Чому ви хочете стати членом? Яка тема вас більше всього хвилює?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Ваші дані обробляються конфіденційно та використовуються лише для процесу членства.",
+            video_error: "Ваш браузер не підтримує це відео.",
+            company_name: "Berliner Wendepunkt"
         },
 
         pl: {
@@ -2182,13 +2207,13 @@ const translations = {
             board_intro: "Berliner Wendepunkt kierują ludzie łączący praktyczne doświadczenie z polityczną odwagą. Nie zawodowi politycy, ale eksperci biorący na siebie odpowiedzialność.",
             
             role_chair: "Przewodniczący", 
-            desc_asb: "Jako ekspert ds. polityki gospodarczej i rozwoju miast, reprezentuje jasny kurs odnowy.",
+            desc_asb: "Jako ekspert ds. polityki gospodarczej i rozwoju miast, reprezentuje jasny kurs odnowy. Jego wizja to Berlin przyciągający inwestorów, a nie odstręczający ich, gdzie wysoce wydajni ludzie znajdują dom. W znacznym stopniu napędza program deregulacji.",
             role_vice: "Wiceprzewodniczący", 
-            desc_tkb: "Thomas Klassen to nasz specjalista ds. wymiaru sprawiedliwości i rządów prawa.",
+            desc_tkb: "Thomas Klassen to nasz specjalista ds. wymiaru sprawiedliwości i rządów prawa. Bezwzględnie zaangażowany w przyspieszenie postępowań sądowych i konsekwentne stosowanie obowiązującego prawa. Bezpieczeństwo dla niego stanowi podstawę każdej wolności.",
             role_gen: "Sekretarz Generalny", 
-            desc_mp: "Edukacja i cyfryzacja to jego główne tematy.",
+            desc_mp: "Edukacja i cyfryzacja to jego główne tematy. Jako Sekretarz Generalny nie tylko organizuje partię, ale walczy o program 1:1 iPad w szkołach. Chce wyprowadzić berlński system edukacji z ery kredą do przyszłości.",
             role_treas: "Skarbnik", 
-            desc_ak: "Dzięki swojej wiedzy z zakresu opieki i medycyny wnosi perspektywę człowieka.",
+            desc_ak: "Dzięki swojej wiedzy z zakresu opieki i medycyny, Arev Khzarijan wnosi perspektywę człowieka do twardych faktów. Nie tylko zarządza finansami, ale także opracowuje nasze koncepcje deregulacji opieki zdrowotnej i lepszego wynagrodzenia personelu opiekuńczego.",,
             role_member: "Członek Zarządu", 
             desc_hk: "Odpowiedzialny za design i komunikację. Hlib zapewnia, że nasze przesłania docierają do obywateli w sposób jasny, nowoczesny i zrozumiały. Reprezentuje świeży wiatr i siłę innowacyjną, którą ucieleśnia Berliner Wendepunkt.",
             
@@ -2217,7 +2242,12 @@ const translations = {
             ph_name: "Imię i nazwisko", 
             ph_email: "Adres e-mail", 
             ph_phone: "Numer telefonu (Opcjonalnie)", 
-            ph_msg: "Dlaczego chcesz zostać członkiem? Który temat Cię najbardziej interesuje?"
+            ph_msg: "Dlaczego chcesz zostać członkiem? Który temat Cię najbardziej interesuje?",
+            
+            // PRIVACY & MISC
+            privacy_notice: "Twoje dane są traktowane poufnie i używane tylko do procesu członkowskiego.",
+            video_error: "Twoja przeglądarka nie obsługuje tego wideo.",
+            company_name: "Berliner Wendepunkt"
         }
     };
 
@@ -2239,6 +2269,7 @@ const translations = {
             // 2. Placeholder Update
             document.getElementById('inp_name').placeholder = translations[lang].ph_name;
             document.getElementById('inp_email').placeholder = translations[lang].ph_email;
+            document.getElementById('inp_phone') && (document.getElementById('inp_phone').placeholder = translations[lang].ph_phone);
             document.getElementById('inp_msg').placeholder = translations[lang].ph_msg;
 
             // 3. Highlight Selected Language in Menu (Yellow Line)
