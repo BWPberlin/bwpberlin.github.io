@@ -1082,6 +1082,30 @@
                 font-size: 1.2rem;
             }
         }
+        /* Fügen Sie das zu Ihrem CSS hinzu */
+
+            /* Wichtig: Position relative für den Container, damit das Canvas absolut darin liegt */
+            #kontakt {
+                position: relative; 
+                overflow: hidden;
+            }
+
+            /* Das Canvas liegt über dem Hintergrund, aber unter dem Text */
+            #contactCanvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1; /* Ebene 1 */
+                pointer-events: none; /* Klicks gehen durch das Canvas durch zum Formular */
+            }
+
+            /* Der Inhalt muss über dem Canvas liegen */
+            .contact-detail-container {
+                position: relative;
+                z-index: 2; /* Ebene 2 (höher als Canvas) */
+            }
     </style>
 </head>
 
@@ -1522,92 +1546,94 @@
         </div>
     </section>
 
-    <section id="kontakt"
-        style="padding-top: 80px; padding-bottom: 100px; background: linear-gradient(135deg, #002D5A 0%, #001B36 100%);">
+<section id="kontakt" style="padding-top: 80px; padding-bottom: 100px; background: linear-gradient(135deg, #002D5A 0%, #001B36 100%); position: relative; overflow: hidden;">
 
-        <div class="contact-detail-container">
-            <div class="contact-intro reveal">
-                <h2 class="section-title" data-i18n="contact_title">Jetzt Mitmachen</h2>
-                <p data-i18n="contact_text">
-                    Berlin wird unter Wert regiert. Wir glauben nicht an Verbote, sondern an Innovation.
-                    Wir suchen Menschen mit Leistungswillen und Verantwortung, die nicht nur zuschauen,
-                    sondern die Zukunft unserer Stadt aktiv mitgestalten wollen.
-                </p>
+    <canvas id="contactCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;"></canvas>
+
+    <div class="contact-detail-container" style="position: relative; z-index: 2;">
+        
+        <div class="contact-intro reveal">
+            <h2 class="section-title" data-i18n="contact_title">Jetzt Mitmachen</h2>
+            <p data-i18n="contact_text">
+                Berlin wird unter Wert regiert. Wir glauben nicht an Verbote, sondern an Innovation.
+                Wir suchen Menschen mit Leistungswillen und Verantwortung, die nicht nur zuschauen,
+                sondern die Zukunft unserer Stadt aktiv mitgestalten wollen.
+            </p>
+        </div>
+
+        <div class="process-row reveal">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <h4 data-i18n="step_1_title">Antrag stellen</h4>
+                <p data-i18n="step_1_desc">Füllen Sie das Formular auf dieser Seite aus. Erzählen Sie uns kurz, was
+                    Sie antreibt.</p>
             </div>
-
-            <div class="process-row reveal">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <h4 data-i18n="step_1_title">Antrag stellen</h4>
-                    <p data-i18n="step_1_desc">Füllen Sie das Formular auf dieser Seite aus. Erzählen Sie uns kurz, was
-                        Sie antreibt.</p>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <h4 data-i18n="step_2_title">Kennenlernen</h4>
-                    <p data-i18n="step_2_desc">Wir laden Sie zu einem persönlichen Gespräch oder einer unserer
-                        Veranstaltungen ein.</p>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <h4 data-i18n="step_3_title">Aufnahme</h4>
-                    <p data-i18n="step_3_desc">Nach Bestätigung durch den Vorstand sind Sie offizielles Mitglied im
-                        Berliner Wendepunkt.</p>
-                </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <h4 data-i18n="step_2_title">Kennenlernen</h4>
+                <p data-i18n="step_2_desc">Wir laden Sie zu einem persönlichen Gespräch oder einer unserer
+                    Veranstaltungen ein.</p>
             </div>
-
-            <div class="membership-grid reveal">
-
-                <div class="membership-info">
-                    <h3 data-i18n="contact_sub">Warum Mitglied werden?</h3>
-                    <p data-i18n="contact_why_1">
-                        Eine Mitgliedschaft beim Berliner Wendepunkt ist mehr als ein Parteibuch. Es ist ein Bekenntnis
-                        zu
-                        einer Stadt, in der Talent und Leistung zählen, nicht die Herkunft. Wir bieten Ihnen die
-                        Plattform,
-                        um Ihre Expertise einzubringen – sei es in der Wirtschaftspolitik, der Bildung oder der
-                        Stadtentwicklung.
-                    </p>
-                    <p data-i18n="contact_why_2">
-                        Wir finanzieren uns unabhängig und setzen auf schlanke Strukturen statt Parteibürokratie.
-                        Ihre Stimme hat bei uns ab Tag 1 Gewicht.
-                    </p>
-
-                    <ul class="benefit-list">
-                        <li data-i18n="ben_1">Aktive Mitwirkung an Programmen und Positionen</li>
-                        <li data-i18n="ben_2">Exklusiver Zugang zu internen Strategie-Treffen</li>
-                        <li data-i18n="ben_3">Direkter Draht zum Vorstand und Experten-Netzwerk</li>
-                        <li data-i18n="ben_4">Übernahme von politischer Verantwortung in Berlin</li>
-                    </ul>
-                </div>
-
-                <div class="styled-form-card">
-                    <div class="form-header">
-                        <h4 data-i18n="form_title">Mitgliedsantrag</h4>
-                        <p style="font-size: 0.9rem; color: #888; margin-bottom: 0;" data-i18n="form_sub">Unverbindliche
-                            Anfrage</p>
-                    </div>
-                    <form action="https://formspree.io/f/mzdpggkj" method="POST">
-                        <input type="text" name="name" id="inp_name" placeholder="Vollständiger Name" required>
-                        <input type="email" name="email" id="inp_email" placeholder="E-Mail-Adresse" required>
-                        <input type="tel" name="phone" placeholder="Telefonnummer (Optional)">
-                        <textarea name="message" id="inp_msg" rows="5"
-                            placeholder="Warum möchten Sie Mitglied werden? Welches Thema bewegt Sie am meisten?"
-                            required></textarea>
-
-                        <button type="submit" class="submit-btn" data-i18n="btn_submit">MITGLIEDSCHAFT
-                            BEANTRAGEN</button>
-                        <p style="font-size: 0.8rem; color: #999; margin-top: 15px; text-align: center;"
-                            data-i18n="privacy_notice">
-                            Ihre Daten werden vertraulich behandelt und nur für den Aufnahmeprozess verwendet.
-                        </p>
-                    </form>
-                </div>
-
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <h4 data-i18n="step_3_title">Aufnahme</h4>
+                <p data-i18n="step_3_desc">Nach Bestätigung durch den Vorstand sind Sie offizielles Mitglied im
+                    Berliner Wendepunkt.</p>
             </div>
         </div>
 
-    </section>
+        <div class="membership-grid reveal">
+
+            <div class="membership-info">
+                <h3 data-i18n="contact_sub">Warum Mitglied werden?</h3>
+                <p data-i18n="contact_why_1">
+                    Eine Mitgliedschaft beim Berliner Wendepunkt ist mehr als ein Parteibuch. Es ist ein Bekenntnis
+                    zu
+                    einer Stadt, in der Talent und Leistung zählen, nicht die Herkunft. Wir bieten Ihnen die
+                    Plattform,
+                    um Ihre Expertise einzubringen – sei es in der Wirtschaftspolitik, der Bildung oder der
+                    Stadtentwicklung.
+                </p>
+                <p data-i18n="contact_why_2">
+                    Wir finanzieren uns unabhängig und setzen auf schlanke Strukturen statt Parteibürokratie.
+                    Ihre Stimme hat bei uns ab Tag 1 Gewicht.
+                </p>
+
+                <ul class="benefit-list">
+                    <li data-i18n="ben_1">Aktive Mitwirkung an Programmen und Positionen</li>
+                    <li data-i18n="ben_2">Exklusiver Zugang zu internen Strategie-Treffen</li>
+                    <li data-i18n="ben_3">Direkter Draht zum Vorstand und Experten-Netzwerk</li>
+                    <li data-i18n="ben_4">Übernahme von politischer Verantwortung in Berlin</li>
+                </ul>
+            </div>
+
+            <div class="styled-form-card">
+                <div class="form-header">
+                    <h4 data-i18n="form_title">Mitgliedsantrag</h4>
+                    <p style="font-size: 0.9rem; color: #888; margin-bottom: 0;" data-i18n="form_sub">Unverbindliche
+                        Anfrage</p>
+                </div>
+                <form action="https://formspree.io/f/mzdpggkj" method="POST">
+                    <input type="text" name="name" id="inp_name" placeholder="Vollständiger Name" required>
+                    <input type="email" name="email" id="inp_email" placeholder="E-Mail-Adresse" required>
+                    <input type="tel" name="phone" placeholder="Telefonnummer (Optional)">
+                    <textarea name="message" id="inp_msg" rows="5"
+                        placeholder="Warum möchten Sie Mitglied werden? Welches Thema bewegt Sie am meisten?"
+                        required></textarea>
+
+                    <button type="submit" class="submit-btn" data-i18n="btn_submit">MITGLIEDSCHAFT
+                        BEANTRAGEN</button>
+                    <p style="font-size: 0.8rem; color: #999; margin-top: 15px; text-align: center;"
+                        data-i18n="privacy_notice">
+                        Ihre Daten werden vertraulich behandelt und nur für den Aufnahmeprozess verwendet.
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</section>
 
     <script>
 // --- HERO CANVAS: DYNAMIC BRIDGE NETWORK (NEW LINES ON HOVER) ---
