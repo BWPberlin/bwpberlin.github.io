@@ -1844,6 +1844,95 @@
         // --- TRANSLATION LOGIC (DE / EN / RU / TR / UK / ZH) ---
         let currentLang = 'de';
 
+        (function () {
+            const canvas = document.getElementById('contactCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width, height;
+
+            // Konfiguration
+            const particleCount = 60; 
+            const particles = [];
+
+            // Farben
+            const colorWhite = 'rgba(255, 255, 255, 0.15)'; 
+            const colorYellow = 'rgba(255, 193, 7, 0.4)'; 
+
+            function resize() {
+                // Wichtig: Größe des Eltern-Elements nehmen
+                const parent = canvas.parentElement;
+                if (parent) {
+                    width = canvas.width = parent.offsetWidth;
+                    height = canvas.height = parent.offsetHeight;
+                }
+                initParticles();
+            }
+
+            class Spark {
+                constructor() {
+                    this.init(true);
+                }
+
+                init(randomY = false) {
+                    this.x = Math.random() * width;
+                    this.y = randomY ? Math.random() * height : height + 10;
+                    this.vx = (Math.random() - 0.5) * 0.5; 
+                    this.vy = -(0.5 + Math.random() * 1.5); // Nach oben
+                    this.size = 1 + Math.random() * 2;
+                    this.isYellow = Math.random() < 0.2;
+                    this.color = this.isYellow ? colorYellow : colorWhite;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.y < -10) this.init(false);
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    if (this.isYellow) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = 'rgba(255, 193, 7, 0.5)';
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            function initParticles() {
+                particles.length = 0;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Spark());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            // Observer damit es nur läuft wenn sichtbar
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    resize(); 
+                }
+            });
+            observer.observe(canvas);
+
+            window.addEventListener('resize', resize);
+            // Kleiner Timeout beim Start um sicherzugehen, dass Layout steht
+            setTimeout(() => { resize(); animate(); }, 100);
+        })();
+
         const translations = {
             de: {
                 nav_home: "Home", nav_program: "Programm", nav_about: "Über Uns", nav_board: "Vorstand", nav_membership: "Mitgliedschaft", btn_lang: "Sprache",
@@ -2649,7 +2738,8 @@
 
             // Close menu
             langMenu.classList.remove("show");
-        }
+        };
+        
     </script>
 </body>
 
