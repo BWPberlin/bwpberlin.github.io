@@ -1610,8 +1610,7 @@
     </section>
 
     <script>
-        // --- HERO CANVAS: HARMONIC TURNING POINT (SANFTE WENDE) ---
-// --- HERO CANVAS: HARMONIC ARROWS (ZIG ZAG) ---
+// --- HERO CANVAS: HARMONIC LONG ARROWS (ZIG ZAG & FADE) ---
 (function () {
     const canvas = document.getElementById('heroCanvas');
     if (!canvas) return;
@@ -1619,15 +1618,14 @@
     let width, height;
 
     // Configuration
-    const arrowCount = 35; // Number of arrows
+    const arrowCount = 25; // Fewer arrows because they are longer
     const arrows = [];
     
-    // Colors
+    // Allowed Colors
     const colors = [
-        'rgba(255, 255, 255, 0.3)', // Subtle White
-        'rgba(255, 255, 255, 0.6)', // Bright White
-        'rgba(255, 193, 7, 0.8)',   // Accent Yellow (Hero)
-        'rgba(255, 193, 7, 0.4)'    // Subtle Yellow
+        'rgba(255, 255, 255, 0.8)',   // White
+        'rgba(255, 193, 7, 0.9)',     // Accent Yellow
+        'rgba(0, 45, 90, 0.6)'        // Dark Blue (adds depth)
     ];
 
     function resize() {
@@ -1642,102 +1640,126 @@
         }
 
         init(randomStart = false) {
-            // General direction: Bottom-Left to Top-Right
-            // We define a "virtual track" angle roughly -45 degrees
-            this.trackAngle = -Math.PI / 4; 
-
-            // Speed
-            this.speed = 1 + Math.random() * 2; 
-
-            // Zig Zag Properties (Sine Wave)
-            this.amplitude = 20 + Math.random() * 60; // How wide the zig zag is
-            this.frequency = 0.005 + Math.random() * 0.01; // How often it turns
-            this.phase = Math.random() * Math.PI * 2; // Start point of wave
-
-            // Dimensions
-            this.length = 40 + Math.random() * 60; // Length of the arrow shaft
-            this.headSize = 8 + Math.random() * 5; 
+            // Setup movement variables
+            this.velocity = 1.5 + Math.random() * 1.5; // Speed
+            this.angle = -Math.PI / 4; // Diagonal towards Top-Right (-45deg)
+            
+            // Harmonic Wave Properties (The Zig Zag)
+            this.amplitude = 30 + Math.random() * 50; // How wide the wave is
+            this.frequency = 0.005 + Math.random() * 0.005; // How stretched the wave is
+            this.phase = Math.random() * Math.PI * 2;
+            
+            // Appearance
             this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.trailLength = 30 + Math.random() * 20; // Length of the arrow shaft (history points)
+            this.width = 2 + Math.random() * 2;
             
-            // Distance traveled along the track
-            // If randomStart is true (on load), spawn them all over the screen.
-            // If false (respawn), spawn them below/left of screen.
-            const diagonal = Math.sqrt(width*width + height*height);
-            this.distance = randomStart ? Math.random() * diagonal : -150;
+            // Path History (for bending effect)
+            this.path = [];
             
-            // Offset to cover the whole width of the band
-            // We shift the start position perpendicular to the movement direction
-            this.offsetY = (Math.random() - 0.5) * (width + height); 
+            // Calculate a random offset to separate the arrows into "lanes"
+            // We use a perpendicular offset from the main diagonal
+            this.laneOffset = (Math.random() - 0.5) * (width + height) * 1.5;
+
+            // Positioning
+            // "t" represents time/distance along the diagonal track
+            if (randomStart) {
+                this.t = Math.random() * (width + height);
+            } else {
+                this.t = -200; // Start off-screen (bottom-left)
+            }
         }
 
         update() {
-            this.distance += this.speed;
+            this.t += this.velocity;
 
-            // Calculate current position based on Sine Wave logic rotated 45 degrees
-            // 1. Calculate Base Position (Straight line)
-            // We start roughly at bottom-left (0, height)
-            const baseX = Math.cos(this.trackAngle) * this.distance;
-            const baseY = height + Math.sin(this.trackAngle) * this.distance;
+            // 1. Calculate the 'Base' diagonal position
+            // Center is (0, height). We move diagonal up-right from there.
+            const baseX = this.t * Math.cos(this.angle);
+            const baseY = height + this.t * Math.sin(this.angle);
 
-            // 2. Add Perpendicular Offset (The "Band" width)
-            // Rotated 90 degrees from track
-            const perpX = Math.cos(this.trackAngle + Math.PI/2) * this.offsetY;
-            const perpY = Math.sin(this.trackAngle + Math.PI/2) * this.offsetY;
+            // 2. Add the Lane Offset (Perpendicular to diagonal)
+            const perpAngle = this.angle + Math.PI / 2;
+            const offsetX = this.laneOffset * Math.cos(perpAngle);
+            const offsetY = this.laneOffset * Math.sin(perpAngle);
 
-            // 3. Add Wave Offset (The Zig Zag)
-            const waveVal = Math.sin(this.distance * this.frequency + this.phase) * this.amplitude;
-            const waveX = Math.cos(this.trackAngle + Math.PI/2) * waveVal;
-            const waveY = Math.sin(this.trackAngle + Math.PI/2) * waveVal;
+            // 3. Add the Harmonic Wave (Sine wave perpendicular to diagonal)
+            const wave = Math.sin(this.t * this.frequency + this.phase) * this.amplitude;
+            const waveX = wave * Math.cos(perpAngle);
+            const waveY = wave * Math.sin(perpAngle);
 
-            // Combine
-            this.x = baseX + perpX + waveX;
-            this.y = baseY + perpY + waveY;
+            // Combine positions
+            const x = baseX + offsetX + waveX;
+            const y = baseY + offsetY + waveY;
 
-            // Determine Rotation for the Arrow Head (Derivative)
-            // Look slightly ahead to see where we are going
-            const nextDist = this.distance + 5;
-            const nextWaveVal = Math.sin(nextDist * this.frequency + this.phase) * this.amplitude;
-            
-            const nextBaseX = Math.cos(this.trackAngle) * nextDist;
-            const nextBaseY = height + Math.sin(this.trackAngle) * nextDist;
-            
-            const nextWaveX = Math.cos(this.trackAngle + Math.PI/2) * nextWaveVal;
-            const nextWaveY = Math.sin(this.trackAngle + Math.PI/2) * nextWaveVal;
+            // Add to path history (this creates the long body)
+            this.path.unshift({ x, y });
 
-            const nextX = nextBaseX + perpX + nextWaveX;
-            const nextY = nextBaseY + perpY + nextWaveY;
+            // Limit path length
+            if (this.path.length > this.trailLength) {
+                this.path.pop();
+            }
 
-            this.rotation = Math.atan2(nextY - this.y, nextX - this.x);
-
-            // Reset if out of bounds (Top Right)
-            // Give it some buffer so it disappears fully
-            if (this.y < -150 || this.x > width + 150) {
+            // Reset if way past top-right
+            // We calculate roughly where the arrow is relative to screen bounds
+            if (x > width + 200 || y < -200) {
                 this.init(false);
             }
         }
 
         draw() {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.rotation);
+            if (this.path.length < 2) return;
 
+            const head = this.path[0];
+            
+            // --- OPACITY LOGIC ---
+            // Calculate distance to Top-Right corner (width, 0)
+            const distToTopRight = Math.sqrt(Math.pow(width - head.x, 2) + Math.pow(0 - head.y, 2));
+            const fadeStartDistance = 500; // Pixels from corner to start fading
+            
+            let alpha = 1;
+            if (distToTopRight < fadeStartDistance) {
+                alpha = distToTopRight / fadeStartDistance;
+            }
+            // Also fade in at the very start (Bottom-Left)
+            const distFromStart = this.t; 
+            if (distFromStart < 100 && distFromStart > 0) {
+                alpha = distFromStart / 100;
+            }
+
+            if (alpha <= 0.01) return; // Don't draw if invisible
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
             ctx.strokeStyle = this.color;
             ctx.fillStyle = this.color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = this.width;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            // Draw Shaft
+            // 1. Draw the Shaft (Curve)
             ctx.beginPath();
-            ctx.moveTo(-this.length, 0);
-            ctx.lineTo(0, 0);
+            ctx.moveTo(head.x, head.y);
+            // Draw lines connecting the history points
+            for (let i = 1; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y);
+            }
             ctx.stroke();
 
-            // Draw Arrow Head
+            // 2. Draw the Arrow Head
+            // Calculate angle based on the first two points of the path
+            const p1 = this.path[0];
+            const p2 = this.path[1] || this.path[0];
+            const angle = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+            const headSize = this.width * 4;
+
+            ctx.translate(head.x, head.y);
+            ctx.rotate(angle);
+            
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.lineTo(-this.headSize, -this.headSize / 2); // Top wing
-            ctx.lineTo(-this.headSize, this.headSize / 2);  // Bottom wing
+            ctx.lineTo(-headSize, -headSize * 0.6);
+            ctx.lineTo(-headSize, headSize * 0.6);
             ctx.closePath();
             ctx.fill();
 
@@ -1754,10 +1776,6 @@
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
-
-        // Optional: Draw a very faint gradient overlay to make arrows pop
-        // ctx.fillStyle = 'rgba(0, 45, 90, 0.05)';
-        // ctx.fillRect(0,0, width, height);
 
         arrows.forEach(arrow => {
             arrow.update();
