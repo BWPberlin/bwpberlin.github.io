@@ -2776,6 +2776,62 @@
             // Close menu
             langMenu.classList.remove("show");
         };
+
+        /* --- AJAX CONTACT FORM LOGIC --- */
+    const form = document.getElementById("ajax-contact-form");
+    const statusDiv = document.getElementById("form-status");
+    const submitBtn = document.getElementById("submit-btn");
+
+    if(form) {
+        async function handleSubmit(event) {
+            event.preventDefault(); // Verhindert das Neuladen der Seite
+            
+            // UI Feedback: Button deaktivieren & Text ändern
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "Sende..."; // Oder Lade-Icon
+            submitBtn.classList.add('loading');
+            statusDiv.className = ''; // Reset Klassen
+            statusDiv.style.display = 'none';
+
+            const data = new FormData(event.target);
+
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerText = originalBtnText; // Text zurücksetzen
+
+                if (response.ok) {
+                    // ERFOLG
+                    statusDiv.innerHTML = translations[currentLang].msg_success || "Vielen Dank!";
+                    statusDiv.classList.add('success');
+                    form.reset(); // Formular leeren
+                } else {
+                    // FEHLER VOM SERVER
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            statusDiv.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                        } else {
+                            statusDiv.innerHTML = translations[currentLang].msg_error || "Fehler beim Senden.";
+                        }
+                        statusDiv.classList.add('error');
+                    });
+                }
+            }).catch(error => {
+                // NETZWERKFEHLER
+                submitBtn.classList.remove('loading');
+                submitBtn.innerText = originalBtnText;
+                
+                statusDiv.innerHTML = translations[currentLang].msg_error || "Netzwerkfehler.";
+                statusDiv.classList.add('error');
+            });
+        }
+        form.addEventListener("submit", handleSubmit);
+    }
         
     </script>
 </body>
